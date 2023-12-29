@@ -83,7 +83,7 @@ const AccountMenu = ({ anchorEl, handleClose }) => {
 };
 
 AccountMenu.propTypes = {
-	anchorEl: PropTypes.element,
+	anchorEl: PropTypes.node,
 	handleClose: PropTypes.func.isRequired,
 };
 

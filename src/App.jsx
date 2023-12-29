@@ -8,18 +8,61 @@ import {
 	Profile,
 	Signup,
 } from "./pages/index.js";
+import Layout from "./components/Layout.jsx";
 
 function App() {
 	return (
 		<>
 			<Router>
 				<Routes>
-					<Route path="/" element={<LandingPage />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/signup" element={<Signup />} />
-					<Route path="/boards" element={<Boards />} />
-					<Route path="/boards/:id" element={<Board />} />
-					<Route path="/profile" element={<Profile />} />
+					<Route
+						path="/"
+						element={
+							<Layout>
+								<LandingPage />
+							</Layout>
+						}
+					/>
+					<Route
+						path="/login"
+						element={
+							<Layout>
+								<Login />
+							</Layout>
+						}
+					/>
+					<Route
+						path="/signup"
+						element={
+							<Layout>
+								<Signup />
+							</Layout>
+						}
+					/>
+					<Route
+						path="/boards"
+						element={
+							<Layout>
+								<Boards />
+							</Layout>
+						}
+					/>
+					<Route
+						path="/boards/:id"
+						element={
+							<Layout>
+								<Board />
+							</Layout>
+						}
+					/>
+					<Route
+						path="/profile"
+						element={
+							<Layout>
+								<Profile />
+							</Layout>
+						}
+					/>
 					<Route path="*" element={<Error404 />} />
 				</Routes>
 			</Router>
