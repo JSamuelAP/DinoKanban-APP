@@ -8,20 +8,17 @@ import {
 	Toolbar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import AccountIcon from "@mui/icons-material/AccountCircle";
 import { Link as RouterLink } from "react-router-dom";
 
 import logo from "../assets/DinoKanban logo horizontal x64.png";
 import NavbarDrawer from "./NavbarDrawer";
 import AccountMenu from "./AccountMenu";
 import useDrawer from "../hooks/useDrawer";
-import useAccountMenu from "../hooks/useAccountMenu";
 import { showOnDesktop, showOnMobile } from "../helpers/mediaQueries";
 
 const Navbar = () => {
 	const [isAuth] = useState(true);
 	const [mobileOpen, handleDrawerToggle] = useDrawer();
-	const [anchorEl, handleMenuClick, handleMenuClose] = useAccountMenu();
 
 	return (
 		<>
@@ -32,7 +29,7 @@ const Navbar = () => {
 							<Box component="img" src={logo} alt="DinoKanban logo" />
 						</Link>
 						<Box sx={showOnDesktop}>
-							{isAuth && (
+							{isAuth ? (
 								<>
 									<Link
 										to="/boards"
@@ -43,24 +40,9 @@ const Navbar = () => {
 									>
 										Boards
 									</Link>
-									<IconButton
-										onClick={handleMenuClick}
-										size="small"
-										aria-label="account of current user"
-										aria-controls={anchorEl ? "account-menu" : undefined}
-										aria-haspopup="true"
-										aria-expanded={anchorEl ? "true" : undefined}
-										color="primary"
-									>
-										<AccountIcon fontSize="large" />
-									</IconButton>
-									<AccountMenu
-										anchorEl={anchorEl}
-										handleClose={handleMenuClose}
-									/>
+									<AccountMenu />
 								</>
-							)}
-							{!isAuth && (
+							) : (
 								<>
 									<Link
 										to="/login"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useAccountMenu = () => {
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -10,6 +10,12 @@ const useAccountMenu = () => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	useEffect(() => {
+		return () => {
+			handleClose();
+		};
+	}, []);
 
 	return [anchorEl, handleClick, handleClose];
 };
