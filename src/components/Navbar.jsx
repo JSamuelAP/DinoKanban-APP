@@ -24,7 +24,7 @@ const Navbar = () => {
 		<>
 			<AppBar component="nav" color="default">
 				<Container>
-					<Toolbar sx={{ justifyContent: "space-between" }}>
+					<Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
 						<Link to="/" component={RouterLink}>
 							<Box component="img" src={logo} alt="DinoKanban logo" />
 						</Link>
