@@ -19,6 +19,7 @@ import AddIcon from "@mui/icons-material/Add";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link as RouterLink } from "react-router-dom";
 import { styled } from "@mui/material/styles";
+import { amber } from "@mui/material/colors";
 
 import ProfileBox from "./ProfileBox";
 import { showOnMobile } from "../helpers/mediaQueries";
@@ -92,7 +93,7 @@ const NavbarDrawer = ({ open, handleToggle }) => {
 												</Typography>
 												{board.favorite && (
 													<ListItemIcon>
-														<FavoriteIcon color="warning" />
+														<FavoriteIcon sx={{ color: amber[500] }} />
 													</ListItemIcon>
 												)}
 											</ListItemButton>

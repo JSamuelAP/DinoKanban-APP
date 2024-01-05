@@ -1,41 +1,81 @@
-import { Box, Card, Fab, Grid, Typography } from "@mui/material";
+import { Box, Fab, Grid, Typography } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Star";
 import AddIcon from "@mui/icons-material/Add";
+import { amber } from "@mui/material/colors";
 
 import Layout from "../components/Layout";
+import CardBoard from "../components/CardBoard";
 
 const boards = [
-	{ id: 1, title: "board 1", favorite: true },
-	{ id: 2, title: "board 2", favorite: true },
-	{ id: 3, title: "board 3", favorite: true },
-	{ id: 4, title: "board 4", favorite: true },
-	{ id: 5, title: "board 5", favorite: false },
-	{ id: 6, title: "board 6", favorite: false },
-	{ id: 7, title: "board 7", favorite: false },
-	{ id: 8, title: "board 8", favorite: false },
+	{
+		id: "1",
+		name: "board 1",
+		updatedAt: "2023-12-22T19:15:00.782Z",
+		favorite: true,
+	},
+	{
+		id: "2",
+		name: "board 2",
+		updatedAt: "2024-01-02T19:15:00.782Z",
+		favorite: true,
+	},
+	{
+		id: "3",
+		name: "board 3",
+		updatedAt: "2024-01-03T19:15:00.782Z",
+		favorite: true,
+	},
+	{
+		id: "4",
+		name: "board 4",
+		updatedAt: "2024-01-03T22:15:00.782Z",
+		favorite: true,
+	},
+	{
+		id: "5",
+		name: "board 5",
+		updatedAt: "2024-01-04T20:19:00.782Z",
+		favorite: false,
+	},
+	{
+		id: "6",
+		name: "board 6",
+		updatedAt: "2024-01-04T07:15:00.782Z",
+		favorite: false,
+	},
+	{
+		id: "7",
+		name: "board 7",
+		updatedAt: "2021-08-20T15:00:00.782Z",
+		favorite: false,
+	},
+	{
+		id: "8",
+		name: "board 8",
+		updatedAt: "2020-01-04T19:15:00.782Z",
+		favorite: false,
+	},
 ];
 
 const Boards = () => {
 	return (
 		<>
 			<Layout>
-				<Box component="main" mt={4}>
-					<Box component="section" mb={4}>
+				<Box component="main" mt={4} mb={8}>
+					<Box component="section" mb={6}>
 						<Typography component="h2" variant="h3" mb={3}>
 							Favorites
 							<FavoriteIcon
 								fontSize="3rem"
-								color="warning"
-								sx={{ verticalAlign: "top", ml: 1 }}
+								sx={{ verticalAlign: "top", ml: 1, color: amber[500] }}
 							/>
 						</Typography>
-						<Grid container spacing={2}>
-							{/* TODO: create board card component */}
+						<Grid container spacing={{ xs: 2, md: 3 }}>
 							{boards.map((board) => {
 								return (
 									board.favorite && (
-										<Grid item xs={3} key={board.id}>
-											<Card>{board.title}</Card>
+										<Grid item xs={12} sm={6} md={4} xl={3} key={board.id}>
+											<CardBoard board={board} />
 										</Grid>
 									)
 								);
@@ -52,11 +92,11 @@ const Boards = () => {
 								{/* TODO: create form and show it in modal */}
 							</Fab>
 						</Box>
-						<Grid container spacing={1}>
+						<Grid container spacing={{ xs: 2, md: 3 }}>
 							{boards.map((board) => {
 								return (
-									<Grid item xs={3} key={board.id}>
-										<Card>{board.title}</Card>
+									<Grid item xs={12} sm={6} md={4} xl={3} key={board.id}>
+										<CardBoard board={board} />
 									</Grid>
 								);
 							})}

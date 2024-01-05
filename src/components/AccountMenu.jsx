@@ -12,11 +12,11 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Link as RouterLink } from "react-router-dom";
 
 import ProfileBox from "./ProfileBox";
-import useAccountMenu from "../hooks/useAccountMenu";
+import useMenu from "../hooks/useMenu";
 import { showOnDesktop } from "../helpers/mediaQueries";
 
 const AccountMenu = () => {
-	const [anchorEl, handleClick, handleClose] = useAccountMenu();
+	const [anchorEl, handleClick, handleClose] = useMenu();
 
 	return (
 		<>

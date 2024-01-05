@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useAccountMenu = () => {
+const useMenu = () => {
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	const handleClick = (event) => {
@@ -20,4 +20,4 @@ const useAccountMenu = () => {
 	return [anchorEl, handleClick, handleClose];
 };
 
-export default useAccountMenu;
+export default useMenu;
