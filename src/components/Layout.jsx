@@ -6,7 +6,7 @@ import Navbar from "./Navbar";
 const Layout = ({ maxWidth = "lg", containerStyles, children }) => {
 	return (
 		<>
-			<Navbar />
+			<Navbar maxWidth={maxWidth} />
 			<Container
 				maxWidth={maxWidth}
 				sx={{ height: "100vh", pt: "71.5px", ...containerStyles }}

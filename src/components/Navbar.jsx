@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import {
 	AppBar,
 	Box,
@@ -16,14 +17,14 @@ import AccountMenu from "./AccountMenu";
 import useDrawer from "../hooks/useDrawer";
 import { showOnDesktop, showOnMobile } from "../helpers/mediaQueries";
 
-const Navbar = () => {
+const Navbar = ({ maxWidth }) => {
 	const [isAuth] = useState(true);
 	const [mobileOpen, handleDrawerToggle] = useDrawer();
 
 	return (
 		<>
 			<AppBar component="nav" color="default">
-				<Container>
+				<Container maxWidth={maxWidth}>
 					<Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
 						<Link to="/" component={RouterLink}>
 							<Box component="img" src={logo} alt="DinoKanban logo" />
@@ -79,6 +80,10 @@ const Navbar = () => {
 			<NavbarDrawer open={mobileOpen} handleToggle={handleDrawerToggle} />
 		</>
 	);
+};
+
+Navbar.propTypes = {
+	maxWidth: PropTypes.oneOf(["xs", "xl", "sm", "md", "lg"]),
 };
 
 export default Navbar;

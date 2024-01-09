@@ -59,7 +59,7 @@ const NavbarDrawer = ({ open, handleToggle }) => {
 						{isAuth && (
 							<>
 								<ListItem disablePadding>
-									<ListItemButton component={RouterLink} to="/login">
+									<ListItemButton component={RouterLink} to="/profile">
 										<ProfileBox maxWidth={200} />
 									</ListItemButton>
 								</ListItem>

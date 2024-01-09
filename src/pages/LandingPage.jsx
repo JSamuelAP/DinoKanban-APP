@@ -1,5 +1,11 @@
+import Layout from "../components/Layout";
+
 const LandingPage = () => {
-	return <div>LandingPage</div>;
+	return (
+		<>
+			<Layout maxWidth="md">landing page</Layout>
+		</>
+	);
 };
 
 export default LandingPage;
