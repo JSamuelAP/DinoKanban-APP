@@ -3,7 +3,7 @@ import FavoriteIcon from "@mui/icons-material/Star";
 import AddIcon from "@mui/icons-material/Add";
 import { amber } from "@mui/material/colors";
 
-import Layout from "../components/Layout";
+import { Layout } from "../components/";
 import CardBoard from "../components/CardBoard";
 
 const boards = [

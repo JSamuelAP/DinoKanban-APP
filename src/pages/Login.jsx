@@ -2,7 +2,7 @@ import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
-import Layout from "../components/Layout";
+import { Layout } from "../components/";
 import logo from "../assets/DinoKanban logo horizontal x512.png";
 
 const Login = () => {

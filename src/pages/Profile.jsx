@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import AccountIcon from "@mui/icons-material/AccountCircle";
 import CalendarIcon from "@mui/icons-material/CalendarMonth";
 
-import Layout from "../components/Layout";
+import { Layout } from "../components/";
 import dayjs from "../helpers/dayjs";
 
 const user = {

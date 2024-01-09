@@ -17,14 +17,14 @@ import AccountMenu from "./AccountMenu";
 import useDrawer from "../hooks/useDrawer";
 import { showOnDesktop, showOnMobile } from "../helpers/mediaQueries";
 
-const Navbar = ({ maxWidth }) => {
+const Navbar = ({ maxWidth, containerStyles }) => {
 	const [isAuth] = useState(true);
 	const [mobileOpen, handleDrawerToggle] = useDrawer();
 
 	return (
 		<>
 			<AppBar component="nav" color="default">
-				<Container maxWidth={maxWidth}>
+				<Container maxWidth={maxWidth} sx={containerStyles}>
 					<Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
 						<Link to="/" component={RouterLink}>
 							<Box component="img" src={logo} alt="DinoKanban logo" />
@@ -84,6 +84,7 @@ const Navbar = ({ maxWidth }) => {
 
 Navbar.propTypes = {
 	maxWidth: PropTypes.oneOf(["xs", "xl", "sm", "md", "lg"]),
+	containerStyles: PropTypes.object,
 };
 
 export default Navbar;

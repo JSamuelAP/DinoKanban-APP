@@ -2,10 +2,8 @@ import { Box, Divider, Grid, Typography } from "@mui/material";
 import CalendarIcon from "@mui/icons-material/CalendarMonth";
 import { useParams } from "react-router-dom";
 
-import Layout from "../components/Layout";
-import CardBoardMenu from "../components/CardBoardMenu";
+import { Layout, CardBoardMenu, BoardList } from "../components/";
 import dayjs from "../helpers/dayjs.js";
-import BoardList from "../components/BoardList.jsx";
 
 const board = {
 	name: "Board name",
