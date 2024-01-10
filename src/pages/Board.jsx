@@ -54,7 +54,7 @@ const Board = () => {
 							<Typography component="h1" variant="h4">
 								{board.name}
 							</Typography>
-							<CardBoardMenu id={id} favorite={board.favorite} />
+							<CardBoardMenu board={board} />
 						</Box>
 						<Typography
 							component="time"

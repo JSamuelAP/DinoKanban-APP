@@ -7,7 +7,7 @@ import { grey } from "@mui/material/colors";
 import dayjs from "../helpers/dayjs.js";
 import CardBoardMenu from "./CardBoardMenu.jsx";
 
-const CardBoard = ({ board: { id, name, updatedAt, favorite = false } }) => {
+const CardBoard = ({ board }) => {
 	return (
 		<>
 			<Card
@@ -17,17 +17,17 @@ const CardBoard = ({ board: { id, name, updatedAt, favorite = false } }) => {
 			>
 				<Link
 					component={RouterLink}
-					to={`/boards/${id}`}
+					to={`/boards/${board.id}`}
 					underline="none"
 					color="unset"
 				>
 					<CardHeader
 						avatar={<BoardIcon color="primary" sx={{ fontSize: "2.5rem" }} />}
-						title={name}
+						title={board.name}
 						titleTypographyProps={{ fontWeight: "500" }}
-						subheader={`Updated ${dayjs(updatedAt).fromNow()}`}
+						subheader={`Updated ${dayjs(board.updatedAt).fromNow()}`}
 						subheaderTypographyProps={{ noWrap: true, maxWidth: 148 }}
-						action={<CardBoardMenu id={id} favorite={favorite} />}
+						action={<CardBoardMenu board={board} />}
 					/>
 				</Link>
 			</Card>

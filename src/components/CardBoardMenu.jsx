@@ -13,10 +13,16 @@ import RemoveFavIcon from "@mui/icons-material/StarBorder";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { red, blue, amber } from "@mui/material/colors";
-import useMenu from "../hooks/useMenu.js";
 
-const CardBoardMenu = ({ id, favorite }) => {
+import useMenu from "../hooks/useMenu.js";
+import useDialog from "../hooks/useDialog";
+import ConfirmDeleteBoard from "./ConfirmDeleteBoard.jsx";
+
+const CardBoardMenu = ({ board }) => {
+	const { id, favorite } = board;
 	const [anchorEl, handleClick, handleClose] = useMenu();
+	const [openDialog, handleOpenDialog, handleCloseDialog] =
+		useDialog(handleClose);
 
 	return (
 		<>
@@ -47,27 +53,27 @@ const CardBoardMenu = ({ id, favorite }) => {
 			>
 				<MenuList dense>
 					{favorite ? (
-						<MenuItem>
+						<MenuItem role="button">
 							<ListItemIcon>
 								<RemoveFavIcon sx={{ color: amber[500] }} />
 							</ListItemIcon>
 							<ListItemText>Remove from favorites</ListItemText>
 						</MenuItem>
 					) : (
-						<MenuItem>
+						<MenuItem role="button">
 							<ListItemIcon>
 								<AddFavIcon sx={{ color: amber[500] }} />
 							</ListItemIcon>
 							<ListItemText>Add to favorites</ListItemText>
 						</MenuItem>
 					)}
-					<MenuItem>
+					<MenuItem role="button">
 						<ListItemIcon>
 							<EditIcon sx={{ color: blue[500] }} />
 						</ListItemIcon>
 						<ListItemText>Edit board</ListItemText>
 					</MenuItem>
-					<MenuItem>
+					<MenuItem role="button" onClick={handleOpenDialog}>
 						<ListItemIcon>
 							<DeleteIcon sx={{ color: red[500] }} />
 						</ListItemIcon>
@@ -75,13 +81,20 @@ const CardBoardMenu = ({ id, favorite }) => {
 					</MenuItem>
 				</MenuList>
 			</Menu>
+			<ConfirmDeleteBoard
+				board={board}
+				open={openDialog}
+				handleClose={handleCloseDialog}
+			/>
 		</>
 	);
 };
 
 CardBoardMenu.propTypes = {
-	id: PropTypes.string.isRequired,
-	favorite: PropTypes.bool.isRequired,
+	board: PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		favorite: PropTypes.bool.isRequired,
+	}),
 };
 
 export default CardBoardMenu;
