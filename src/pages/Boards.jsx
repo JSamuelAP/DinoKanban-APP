@@ -1,9 +1,8 @@
-import { Box, Fab, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Star";
-import AddIcon from "@mui/icons-material/Add";
 import { amber } from "@mui/material/colors";
 
-import { Layout } from "../components/";
+import { Layout, CreateBoardForm } from "../components/";
 import CardBoard from "../components/CardBoard";
 
 const boards = [
@@ -87,10 +86,7 @@ const Boards = () => {
 							<Typography component="h2" variant="h3">
 								Your boards
 							</Typography>
-							<Fab color="primary" aria-label="add">
-								<AddIcon />
-								{/* TODO: create form and show it in modal */}
-							</Fab>
+							<CreateBoardForm />
 						</Box>
 						<Grid container spacing={{ xs: 2, md: 3 }}>
 							{boards.map((board) => {
