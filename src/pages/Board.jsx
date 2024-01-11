@@ -6,6 +6,7 @@ import { Layout, CardBoardMenu, BoardList } from "../components/";
 import dayjs from "../helpers/dayjs.js";
 
 const board = {
+	id: "1",
 	name: "Board name",
 	createdAt: "2024-01-01T19:15:00.782Z",
 	updatedAt: "2024-01-04T19:15:00.782Z",
