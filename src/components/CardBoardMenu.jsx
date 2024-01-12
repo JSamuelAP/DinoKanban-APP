@@ -18,7 +18,7 @@ import useMenu from "../hooks/useMenu.js";
 import useDialog from "../hooks/useDialog";
 import ConfirmDeleteBoard from "./ConfirmDeleteBoard.jsx";
 
-const CardBoardMenu = ({ board }) => {
+const CardBoardMenu = ({ board, handleEdit }) => {
 	const { id, favorite } = board;
 	const [anchorEl, handleClick, handleClose] = useMenu();
 	const [openDialog, handleOpenDialog, handleCloseDialog] =
@@ -33,7 +33,7 @@ const CardBoardMenu = ({ board }) => {
 				aria-expanded={anchorEl ? "true" : undefined}
 				aria-label="options"
 				onClick={(e) => {
-					e.preventDefault();
+					e.stopPropagation();
 					handleClick(e);
 				}}
 			>
@@ -67,7 +67,13 @@ const CardBoardMenu = ({ board }) => {
 							<ListItemText>Add to favorites</ListItemText>
 						</MenuItem>
 					)}
-					<MenuItem role="button">
+					<MenuItem
+						role="button"
+						onClick={() => {
+							handleEdit();
+							handleClose();
+						}}
+					>
 						<ListItemIcon>
 							<EditIcon sx={{ color: blue[500] }} />
 						</ListItemIcon>
@@ -95,6 +101,7 @@ CardBoardMenu.propTypes = {
 		id: PropTypes.string.isRequired,
 		favorite: PropTypes.bool.isRequired,
 	}),
+	handleEdit: PropTypes.func.isRequired,
 };
 
 export default CardBoardMenu;

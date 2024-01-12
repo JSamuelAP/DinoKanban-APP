@@ -5,6 +5,7 @@ import CardBoardMenu from "./CardBoardMenu.jsx";
 import CardTask from "./CardTask.jsx";
 import ConfirmDeleteBoard from "./ConfirmDeleteBoard.jsx";
 import CreateBoardForm from "./CreateBoardForm.jsx";
+import EditableText from "./EditableText.jsx";
 import Layout from "./Layout.jsx";
 import Navbar from "./Navbar.jsx";
 import NavbarDrawer from "./NavbarDrawer.jsx";
@@ -18,6 +19,7 @@ export {
 	CardTask,
 	ConfirmDeleteBoard,
 	CreateBoardForm,
+	EditableText,
 	Layout,
 	Navbar,
 	NavbarDrawer,

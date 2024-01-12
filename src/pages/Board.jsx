@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import CalendarIcon from "@mui/icons-material/CalendarMonth";
 import { useParams } from "react-router-dom";
 
-import { Layout, CardBoardMenu, BoardList } from "../components/";
+import { Layout, CardBoardMenu, BoardList, EditableText } from "../components/";
 import dayjs from "../helpers/dayjs.js";
 
 const board = {
@@ -38,6 +39,7 @@ const tasks = {
 
 const Board = () => {
 	const { id } = useParams();
+	const [editMode, setEditMode] = useState(false);
 
 	const lists = [
 		{ name: "backlog", title: "💡 Backlog" },
@@ -51,11 +53,26 @@ const Board = () => {
 			<Layout>
 				<Box component="main" mt={4} mb={8}>
 					<Box component="section">
-						<Box display="flex" justifyContent="space-between">
-							<Typography component="h1" variant="h4">
-								{board.name}
-							</Typography>
-							<CardBoardMenu board={board} />
+						<Box
+							display="flex"
+							justifyContent="space-between"
+							alignItems="start"
+						>
+							<EditableText
+								textNode={
+									<Typography component="h1" variant="h4">
+										{board.name}
+									</Typography>
+								}
+								isEditMode={editMode}
+								board={board}
+								handleBlur={() => setEditMode(false)}
+								variant="board-page"
+							/>
+							<CardBoardMenu
+								board={board}
+								handleEdit={() => setEditMode(true)}
+							/>
 						</Box>
 						<Typography
 							component="time"
