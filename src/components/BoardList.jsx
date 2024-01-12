@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
-import { Button, Card, CardContent, CardHeader, Stack } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Card, CardContent, CardHeader, Stack } from "@mui/material";
 
 import CardTask from "./CardTask";
+import CreateTaskForm from "./CreateTaskForm";
 
-const BoardList = ({ list: { title, tasks } }) => {
+const BoardList = ({ list: { name, title, tasks }, board }) => {
 	return (
 		<>
 			<Card>
@@ -22,9 +22,7 @@ const BoardList = ({ list: { title, tasks } }) => {
 						{tasks.map((task) => (
 							<CardTask task={task} key={task.id} />
 						))}
-						<Button startIcon={<AddIcon />} fullWidth>
-							Add task
-						</Button>
+						<CreateTaskForm list={name} board={board} />
 					</Stack>
 				</CardContent>
 			</Card>
@@ -34,6 +32,7 @@ const BoardList = ({ list: { title, tasks } }) => {
 
 BoardList.propTypes = {
 	list: PropTypes.shape({
+		name: PropTypes.oneOf(["backlog", "todo", "doing", "done"]),
 		title: PropTypes.string.isRequired,
 		tasks: PropTypes.arrayOf(
 			PropTypes.shape({
@@ -42,6 +41,7 @@ BoardList.propTypes = {
 			})
 		).isRequired,
 	}).isRequired,
+	board: PropTypes.string.isRequired,
 };
 
 export default BoardList;
