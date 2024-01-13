@@ -1,6 +1,9 @@
 import PropTypes from "prop-types";
 import { Button, styled } from "@mui/material";
 
+import useDialog from "../hooks/useDialog.js";
+import TaskDialog from "./TaskDialog.jsx";
+
 const StyledButton = styled(Button)({
 	display: "block",
 	textAlign: "left",
@@ -11,10 +14,13 @@ const StyledButton = styled(Button)({
 	padding: "1rem",
 });
 
-const CardTask = ({ task: { id, title } }) => {
+const CardTask = ({ task }) => {
+	const [open, handleOpen, handleClose] = useDialog();
+
 	return (
 		<>
-			<StyledButton>{title}</StyledButton>
+			<StyledButton onClick={handleOpen}>{task.title}</StyledButton>
+			<TaskDialog task={task} open={open} handleClose={handleClose} />
 		</>
 	);
 };

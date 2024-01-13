@@ -11,6 +11,7 @@ import Layout from "./Layout.jsx";
 import Navbar from "./Navbar.jsx";
 import NavbarDrawer from "./NavbarDrawer.jsx";
 import ProfileBox from "./ProfileBox.jsx";
+import TaskDialog from "./TaskDialog.jsx";
 
 export {
 	AccountMenu,
@@ -26,4 +27,5 @@ export {
 	Navbar,
 	NavbarDrawer,
 	ProfileBox,
+	TaskDialog,
 };
