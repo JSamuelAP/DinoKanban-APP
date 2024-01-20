@@ -1,22 +1,47 @@
-import { Box, Button, Link, TextField, Typography } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Box, Link, TextField, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import {
+	Link as RouterLink,
+	Navigate,
+	useNavigate,
+	useLocation,
+} from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 
 import { Layout } from "../components/";
 import logo from "../assets/DinoKanban logo horizontal x512.png";
+import useAuthStore from "../store/authStore.js";
+import { login } from "../services/authServices.js";
 
 const Login = () => {
+	const { setSession, isAuth } = useAuthStore();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 		reset,
 	} = useForm();
+	const navigate = useNavigate();
+	const location = useLocation();
+	const from = location.state?.from?.pathname || "/boards";
+
+	const { mutate: loginUser, isPending } = useMutation({
+		mutationFn: (data) => login(data),
+		onSuccess: (response) => {
+			setSession(response.data.user, response.data.token);
+			localStorage.setItem("user", JSON.stringify(response.data.user));
+			navigate(from, { replace: true });
+		},
+		onError: (error) => console.err(error),
+	});
 
 	const onSubmit = handleSubmit((data) => {
-		console.log(data);
+		loginUser(data);
 		reset();
 	});
+
+	if (isAuth) return <Navigate to="/boards" />;
 
 	return (
 		<>
@@ -85,9 +110,16 @@ const Login = () => {
 									fullWidth
 								/>
 							</Box>
-							<Button type="submit" variant="contained" size="large" fullWidth>
+							<LoadingButton
+								loading={isPending}
+								loadingIndicator="Login..."
+								type="submit"
+								variant="contained"
+								size="large"
+								fullWidth
+							>
 								login
-							</Button>
+							</LoadingButton>
 							<Typography align="center" mt={2}>
 								Don&apos;t have an account?
 								<Link

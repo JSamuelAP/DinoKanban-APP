@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
 import {
 	Box,
 	Divider,
@@ -21,6 +20,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { amber } from "@mui/material/colors";
 
+import useAuthStore from "../store/authStore";
 import ProfileBox from "./ProfileBox";
 import { showOnMobile } from "../helpers/mediaQueries";
 
@@ -41,8 +41,8 @@ const BoardsNav = styled(List)({
 	},
 });
 
-const NavbarDrawer = ({ open, handleToggle }) => {
-	const [isAuth] = useState(true);
+const NavbarDrawer = ({ open, handleToggle, handleLogout }) => {
+	const { isAuth } = useAuthStore();
 
 	return (
 		<nav>
@@ -116,7 +116,7 @@ const NavbarDrawer = ({ open, handleToggle }) => {
 									disablePadding
 									sx={{ position: "absolute", bottom: 8 }}
 								>
-									<ListItemButton component={RouterLink} to="/logout">
+									<ListItemButton onClick={handleLogout}>
 										<ListItemIcon>
 											<LogoutIcon />
 										</ListItemIcon>
@@ -155,6 +155,7 @@ const NavbarDrawer = ({ open, handleToggle }) => {
 NavbarDrawer.propTypes = {
 	open: PropTypes.bool.isRequired,
 	handleToggle: PropTypes.func.isRequired,
+	handleLogout: PropTypes.func.isRequired,
 };
 
 export default NavbarDrawer;

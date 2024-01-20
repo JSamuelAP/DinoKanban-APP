@@ -7,7 +7,8 @@ import {
 	Login,
 	Profile,
 	Signup,
-} from "./pages/index.js";
+} from "./pages/";
+import { PersistLogin, ProtectedRoute } from "./components/";
 
 function App() {
 	return (
@@ -17,9 +18,13 @@ function App() {
 					<Route path="/" element={<LandingPage />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/signup" element={<Signup />} />
-					<Route path="/boards" element={<Boards />} />
-					<Route path="/boards/:id" element={<Board />} />
-					<Route path="/profile" element={<Profile />} />
+					<Route element={<PersistLogin />}>
+						<Route element={<ProtectedRoute />}>
+							<Route path="/boards" element={<Boards />} />
+							<Route path="/boards/:id" element={<Board />} />
+							<Route path="/profile" element={<Profile />} />
+						</Route>
+					</Route>
 					<Route path="*" element={<Error404 />} />
 				</Routes>
 			</Router>

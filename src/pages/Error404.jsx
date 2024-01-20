@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
+import useAuthStore from "../store/authStore";
 import { Layout } from "../components/";
 
 const Error404 = () => {
-	const [isAuth, setIsAuth] = useState(false);
+	const { isAuth } = useAuthStore();
 
 	return (
 		<>

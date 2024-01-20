@@ -10,7 +10,9 @@ import EditableText from "./EditableText.jsx";
 import Layout from "./Layout.jsx";
 import Navbar from "./Navbar.jsx";
 import NavbarDrawer from "./NavbarDrawer.jsx";
+import PersistLogin from "./PersistLogin.jsx";
 import ProfileBox from "./ProfileBox.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 import TaskDialog from "./TaskDialog.jsx";
 import UpdateTaskForm from "./UpdateTaskForm.jsx";
 
@@ -27,7 +29,9 @@ export {
 	Layout,
 	Navbar,
 	NavbarDrawer,
+	PersistLogin,
 	ProfileBox,
+	ProtectedRoute,
 	TaskDialog,
 	UpdateTaskForm,
 };

@@ -11,6 +11,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 			<QueryClientProvider client={queryClient}>
 				<CssBaseline />
 				<App />
+				<ReactQueryDevtools />
 			</QueryClientProvider>
 		</ThemeProvider>
 	</React.StrictMode>

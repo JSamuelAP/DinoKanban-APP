@@ -1,11 +1,13 @@
 import { useForm } from "react-hook-form";
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, Navigate } from "react-router-dom";
 
+import useAuthStore from "../store/authStore";
 import { Layout } from "../components/";
 import logo from "../assets/DinoKanban logo horizontal x512.png";
 
 const Signup = () => {
+	const { isAuth } = useAuthStore();
 	const {
 		register,
 		handleSubmit,
@@ -17,6 +19,8 @@ const Signup = () => {
 		console.log(data);
 		reset();
 	});
+
+	if (isAuth) return <Navigate to="/boards" />;
 
 	return (
 		<>

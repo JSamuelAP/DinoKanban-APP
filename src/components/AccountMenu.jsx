@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {
 	Divider,
 	IconButton,
@@ -15,7 +16,7 @@ import ProfileBox from "./ProfileBox";
 import useMenu from "../hooks/useMenu";
 import { showOnDesktop } from "../helpers/mediaQueries";
 
-const AccountMenu = () => {
+const AccountMenu = ({ handleLogout }) => {
 	const [anchorEl, handleClick, handleClose] = useMenu();
 
 	return (
@@ -80,22 +81,19 @@ const AccountMenu = () => {
 					</MenuItem>
 				</Link>
 				<Divider />
-				<Link
-					to="/logout"
-					component={RouterLink}
-					underline="none"
-					color="MenuText"
-				>
-					<MenuItem>
-						<ListItemIcon>
-							<LogoutIcon />
-						</ListItemIcon>
-						Logout
-					</MenuItem>
-				</Link>
+				<MenuItem onClick={handleLogout}>
+					<ListItemIcon>
+						<LogoutIcon />
+					</ListItemIcon>
+					Logout
+				</MenuItem>
 			</Menu>
 		</>
 	);
+};
+
+AccountMenu.propTypes = {
+	handleLogout: PropTypes.func.isRequired,
 };
 
 export default AccountMenu;
