@@ -25,7 +25,7 @@ const CardBoard = ({ board }) => {
 					tabIndex={0}
 					component="div"
 					onClick={() => {
-						navigate(`/boards/${board.id}`);
+						navigate(`/boards/${board._id}`);
 					}}
 				>
 					<CardHeader
@@ -56,7 +56,7 @@ const CardBoard = ({ board }) => {
 
 CardBoard.propTypes = {
 	board: PropTypes.shape({
-		id: PropTypes.string.isRequired,
+		_id: PropTypes.string.isRequired,
 		name: PropTypes.string.isRequired,
 		updatedAt: PropTypes.string.isRequired,
 		favorite: PropTypes.bool,

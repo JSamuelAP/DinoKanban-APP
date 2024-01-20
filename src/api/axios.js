@@ -12,5 +12,8 @@ const apiPrivate = axios.create({
 	withCredentials: true,
 });
 
+api.defaults.headers.common["Content-Type"] = "application/json";
+apiPrivate.defaults.headers.common["Content-Type"] = "application/json";
+
 export default api;
 export { apiPrivate };

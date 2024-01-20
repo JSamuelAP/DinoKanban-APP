@@ -13,7 +13,7 @@ const ConfirmDeleteBoard = ({ board, open, handleClose }) => {
 	const navigate = useNavigate();
 
 	const handleDelete = () => {
-		console.log("Deleting board ", board.id);
+		console.log("Deleting board ", board._id);
 		navigate("/boards/");
 		handleClose();
 	};
@@ -63,7 +63,7 @@ const ConfirmDeleteBoard = ({ board, open, handleClose }) => {
 
 ConfirmDeleteBoard.propTypes = {
 	board: PropTypes.shape({
-		id: PropTypes.string.isRequired,
+		_id: PropTypes.string.isRequired,
 		name: PropTypes.string.isRequired,
 	}).isRequired,
 	open: PropTypes.bool.isRequired,

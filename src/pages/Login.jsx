@@ -126,7 +126,7 @@ const Login = () => {
 							</LoadingButton>
 							{isError && (
 								<Alert severity="error" sx={{ mt: 2 }}>
-									{error.response.data.message || "Something went wrong"}
+									{error?.response?.data?.message || "Something went wrong"}
 								</Alert>
 							)}
 							<Typography align="center" mt={2}>

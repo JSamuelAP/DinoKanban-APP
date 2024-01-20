@@ -19,7 +19,7 @@ import useDialog from "../hooks/useDialog";
 import ConfirmDeleteBoard from "./ConfirmDeleteBoard.jsx";
 
 const CardBoardMenu = ({ board, handleEdit }) => {
-	const { id, favorite } = board;
+	const { _id, favorite } = board;
 	const [anchorEl, handleClick, handleClose] = useMenu();
 	const [openDialog, handleOpenDialog, handleCloseDialog] =
 		useDialog(handleClose);
@@ -27,8 +27,8 @@ const CardBoardMenu = ({ board, handleEdit }) => {
 	return (
 		<>
 			<IconButton
-				id={`button-options-${id}`}
-				aria-controls={anchorEl ? `menu-options-${id}` : undefined}
+				id={`button-options-${_id}`}
+				aria-controls={anchorEl ? `menu-options-${_id}` : undefined}
 				aria-haspopup="true"
 				aria-expanded={anchorEl ? "true" : undefined}
 				aria-label="options"
@@ -40,13 +40,13 @@ const CardBoardMenu = ({ board, handleEdit }) => {
 				<MoreVertIcon />
 			</IconButton>
 			<Menu
-				id={`menu-options-${id}`}
+				id={`menu-options-${_id}`}
 				anchorEl={anchorEl}
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
 				anchorOrigin={{ vertical: "top", horizontal: "left" }}
 				transformOrigin={{ vertical: "top", horizontal: "right" }}
-				MenuListProps={{ "aria-labelledby": `button-options-${id}` }}
+				MenuListProps={{ "aria-labelledby": `button-options-${_id}` }}
 				onClick={(e) => {
 					e.stopPropagation();
 				}}
@@ -98,7 +98,7 @@ const CardBoardMenu = ({ board, handleEdit }) => {
 
 CardBoardMenu.propTypes = {
 	board: PropTypes.shape({
-		id: PropTypes.string.isRequired,
+		_id: PropTypes.string.isRequired,
 		favorite: PropTypes.bool.isRequired,
 	}),
 	handleEdit: PropTypes.func.isRequired,
