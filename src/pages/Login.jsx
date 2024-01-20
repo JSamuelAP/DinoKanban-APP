@@ -1,4 +1,4 @@
-import { Box, Link, TextField, Typography } from "@mui/material";
+import { Alert, Box, Link, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import {
 	Link as RouterLink,
@@ -26,19 +26,23 @@ const Login = () => {
 	const location = useLocation();
 	const from = location.state?.from?.pathname || "/boards";
 
-	const { mutate: loginUser, isPending } = useMutation({
+	const {
+		mutate: loginUser,
+		isPending,
+		isError,
+		error,
+	} = useMutation({
 		mutationFn: (data) => login(data),
 		onSuccess: (response) => {
+			reset();
 			setSession(response.data.user, response.data.token);
 			localStorage.setItem("user", JSON.stringify(response.data.user));
 			navigate(from, { replace: true });
 		},
-		onError: (error) => console.err(error),
 	});
 
 	const onSubmit = handleSubmit((data) => {
 		loginUser(data);
-		reset();
 	});
 
 	if (isAuth) return <Navigate to="/boards" />;
@@ -120,6 +124,11 @@ const Login = () => {
 							>
 								login
 							</LoadingButton>
+							{isError && (
+								<Alert severity="error" sx={{ mt: 2 }}>
+									{error.response.data.message || "Something went wrong"}
+								</Alert>
+							)}
 							<Typography align="center" mt={2}>
 								Don&apos;t have an account?
 								<Link
