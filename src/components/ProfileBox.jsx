@@ -2,7 +2,11 @@ import PropTypes from "prop-types";
 import { Box, Typography } from "@mui/material";
 import AccountIcon from "@mui/icons-material/AccountCircle";
 
+import useAuthStore from "../store/authStore.js";
+
 const ProfileBox = ({ minWidth = 0, maxWidth = 300 }) => {
+	const { user } = useAuthStore();
+
 	return (
 		<Box display="flex" columnGap={1}>
 			<AccountIcon sx={{ fontSize: "2.8rem" }} color="primary" />
@@ -14,7 +18,7 @@ const ProfileBox = ({ minWidth = 0, maxWidth = 300 }) => {
 				maxWidth={maxWidth}
 			>
 				<Typography fontWeight={500} noWrap>
-					Username
+					{user.username}
 				</Typography>
 				<Typography
 					variant="caption"
@@ -23,7 +27,7 @@ const ProfileBox = ({ minWidth = 0, maxWidth = 300 }) => {
 					noWrap
 					overflow="visible"
 				>
-					user@email.com
+					{user.email}
 				</Typography>
 			</Box>
 		</Box>

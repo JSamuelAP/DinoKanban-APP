@@ -2,16 +2,13 @@ import { Box, Typography } from "@mui/material";
 import AccountIcon from "@mui/icons-material/AccountCircle";
 import CalendarIcon from "@mui/icons-material/CalendarMonth";
 
-import { Layout } from "../components/";
+import useAuthStore from "../store/authStore";
 import dayjs from "../helpers/dayjs";
-
-const user = {
-	name: "User name",
-	email: "example@email.com",
-	createdAt: "2023-12-22T19:15:00.782Z",
-};
+import { Layout } from "../components/";
 
 const Profile = () => {
+	const { user } = useAuthStore();
+
 	return (
 		<>
 			<Layout maxWidth="md">
@@ -35,7 +32,7 @@ const Profile = () => {
 							maxWidth="100%"
 						>
 							<Typography component="h2" variant="h3" fontWeight={500}>
-								{user.name}
+								{user.username}
 							</Typography>
 							<Typography component="h3" variant="h4" noWrap>
 								{user.email}
