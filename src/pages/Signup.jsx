@@ -1,10 +1,14 @@
+import { Alert, Box, Button, Link, TextField, Typography } from "@mui/material";
+import { Link as RouterLink, Navigate, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Box, Button, Link, TextField, Typography } from "@mui/material";
-import { Link as RouterLink, Navigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 import useAuthStore from "../store/authStore";
+import { signup } from "../services/authServices";
 import { Layout } from "../components/";
 import logo from "../assets/DinoKanban logo horizontal x512.png";
+import { LoadingButton } from "@mui/lab";
+import { Watch } from "@mui/icons-material";
 
 const Signup = () => {
 	const { isAuth } = useAuthStore();
@@ -13,10 +17,30 @@ const Signup = () => {
 		handleSubmit,
 		formState: { errors },
 		reset,
+		watch,
 	} = useForm();
+	const navigate = useNavigate();
+
+	const {
+		mutate: signupUser,
+		data,
+		isPending,
+		isSuccess,
+		isError,
+		error,
+	} = useMutation({
+		mutationFn: (data) => signup(data),
+		onSuccess: (response) => {
+			console.log(response);
+			reset();
+			setTimeout(() => {
+				navigate("/login");
+			}, 5000);
+		},
+	});
 
 	const onSubmit = handleSubmit((data) => {
-		console.log(data);
+		signupUser(data);
 		reset();
 	});
 
@@ -92,7 +116,7 @@ const Signup = () => {
 									fullWidth
 								/>
 							</Box>
-							<Box mb={4}>
+							<Box mb={2}>
 								<TextField
 									{...register("password", {
 										required: "Password is required",
@@ -111,9 +135,42 @@ const Signup = () => {
 									fullWidth
 								/>
 							</Box>
-							<Button type="submit" variant="contained" size="large" fullWidth>
-								login
-							</Button>
+							<Box mb={4}>
+								<TextField
+									{...register("confirmPassword", {
+										required: "Confirm password is required",
+										validate: (value) =>
+											watch("password") === value || "Passwords does not match",
+									})}
+									type="password"
+									label="Confirm password"
+									error={!!errors.confirmPassword}
+									helperText={errors.confirmPassword?.message}
+									variant="standard"
+									fullWidth
+								/>
+							</Box>
+							<LoadingButton
+								loading={isPending}
+								loadingIndicator="Creating..."
+								type="submit"
+								variant="contained"
+								size="large"
+								fullWidth
+							>
+								Signup
+							</LoadingButton>
+							{isSuccess && (
+								<Alert severity="success" sx={{ mt: 2 }}>
+									{data?.message || "Your account was created successfully"}.
+									Now login
+								</Alert>
+							)}
+							{isError && (
+								<Alert severity="error" sx={{ mt: 2 }}>
+									{error?.response?.data?.message || "Something went wrong"}
+								</Alert>
+							)}
 							<Typography align="center" mt={2}>
 								Already have an account?
 								<Link
