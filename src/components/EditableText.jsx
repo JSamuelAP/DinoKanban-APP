@@ -54,7 +54,6 @@ const EditableText = ({
 			return;
 		}
 
-		console.log(`Updating board ${board.id}: ${board.name} -> ${text}`);
 		handleBlur();
 	};
 
@@ -87,7 +86,7 @@ EditableText.propTypes = {
 	textNode: PropTypes.node.isRequired,
 	isEditMode: PropTypes.bool.isRequired,
 	board: PropTypes.shape({
-		id: PropTypes.string.isRequired,
+		_id: PropTypes.string.isRequired,
 		name: PropTypes.string.isRequired,
 	}).isRequired,
 	handleBlur: PropTypes.func.isRequired,

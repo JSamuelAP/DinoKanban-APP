@@ -1,18 +1,20 @@
 import { useState } from "react";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import CalendarIcon from "@mui/icons-material/CalendarMonth";
+import { useQuery } from "@tanstack/react-query";
 import { Link as RouterLink, useParams } from "react-router-dom";
 
 import { Layout, CardBoardMenu, BoardList, EditableText } from "../components/";
+import useApiPrivate from "../hooks/useApiPrivate.js";
+import { getBoard } from "../services/boardsServices.js";
 import dayjs from "../helpers/dayjs.js";
 
-const board = {
-	// id: "1",
-	// name: "Board name",
-	// createdAt: "2024-01-01T19:15:00.782Z",
-	// updatedAt: "2024-01-04T19:15:00.782Z",
-	// favorite: true,
-};
+const lists = [
+	{ name: "backlog", title: "💡 Backlog" },
+	{ name: "todo", title: "⏰ Todo" },
+	{ name: "doing", title: "🏗️ Doing" },
+	{ name: "done", title: "✅ Done" },
+];
 
 const tasks = {
 	backlog: [
@@ -125,19 +127,49 @@ const tasks = {
 const Board = () => {
 	const { id } = useParams();
 	const [editMode, setEditMode] = useState(false);
+	const api = useApiPrivate();
 
-	const lists = [
-		{ name: "backlog", title: "💡 Backlog" },
-		{ name: "todo", title: "⏰ Todo" },
-		{ name: "doing", title: "🏗️ Doing" },
-		{ name: "done", title: "✅ Done" },
-	];
+	const { data, isLoading, isSuccess, isError } = useQuery({
+		queryKey: ["board"],
+		queryFn: () => getBoard(api, id),
+	});
+	const board = data?.data?.board || {};
 
 	return (
 		<>
 			<Layout>
 				<Box component="main" mt={4} mb={8}>
-					{board.id ? (
+					{isError && (
+						<>
+							<Typography component="h1" textAlign="center" mt={8}>
+								<Typography
+									component="span"
+									fontWeight={700}
+									fontSize="12rem"
+									lineHeight={1}
+									color="primary"
+									display="block"
+								>
+									404
+								</Typography>
+								<Typography component="span" variant="h5" display="block">
+									The board you are looking for cannot be found
+								</Typography>
+							</Typography>
+							<Box textAlign="center" mt={8}>
+								<Button
+									LinkComponent={RouterLink}
+									to="/boards"
+									variant="contained"
+									size="large"
+								>
+									Go Boards page
+								</Button>
+							</Box>
+						</>
+					)}
+					{isLoading && <p>loading...</p>}
+					{isSuccess && (
 						<>
 							<Box component="section">
 								<Box
@@ -184,39 +216,11 @@ const Board = () => {
 										<Grid item xs={12} sm={6} md={3} key={name}>
 											<BoardList
 												list={{ name, title, tasks: tasks[name] }}
-												board={board.id}
+												board={board._id}
 											/>
 										</Grid>
 									))}
 								</Grid>
-							</Box>
-						</>
-					) : (
-						<>
-							<Typography component="h1" textAlign="center" mt={8}>
-								<Typography
-									component="span"
-									fontWeight={700}
-									fontSize="12rem"
-									lineHeight={1}
-									color="primary"
-									display="block"
-								>
-									404
-								</Typography>
-								<Typography component="span" variant="h5" display="block">
-									The board you are looking for cannot be found
-								</Typography>
-							</Typography>
-							<Box textAlign="center" mt={8}>
-								<Button
-									LinkComponent={RouterLink}
-									to="/boards"
-									variant="contained"
-									size="large"
-								>
-									Go Boards page
-								</Button>
 							</Box>
 						</>
 					)}

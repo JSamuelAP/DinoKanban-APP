@@ -15,4 +15,19 @@ const getBoards = async (api) => {
 	return response.data;
 };
 
-export { getBoards };
+const getBoard = async (api, id) => {
+	const response = await api.get("boards/" + id, {
+		transformResponse: axios.defaults.transformResponse.concat((data) => {
+			if (data.success) data.data.board.favorite = true;
+			return data;
+		}),
+	});
+	return response.data;
+};
+
+const createBoard = async (api, body) => {
+	const response = await api.post("boards", body);
+	return response.data;
+};
+
+export { getBoards, getBoard, createBoard };

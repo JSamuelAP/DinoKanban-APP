@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Link, TextField, Typography } from "@mui/material";
+import { Alert, Box, Link, TextField, Typography } from "@mui/material";
 import { Link as RouterLink, Navigate, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -8,7 +8,6 @@ import { signup } from "../services/authServices";
 import { Layout } from "../components/";
 import logo from "../assets/DinoKanban logo horizontal x512.png";
 import { LoadingButton } from "@mui/lab";
-import { Watch } from "@mui/icons-material";
 
 const Signup = () => {
 	const { isAuth } = useAuthStore();
@@ -30,8 +29,7 @@ const Signup = () => {
 		error,
 	} = useMutation({
 		mutationFn: (data) => signup(data),
-		onSuccess: (response) => {
-			console.log(response);
+		onSuccess: () => {
 			reset();
 			setTimeout(() => {
 				navigate("/login");

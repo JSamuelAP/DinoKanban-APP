@@ -1,4 +1,6 @@
+import PropTypes from "prop-types";
 import {
+	Alert,
 	Button,
 	Dialog,
 	DialogActions,
@@ -9,10 +11,13 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 
 import useDialog from "../hooks/useDialog";
+import useApiPrivate from "../hooks/useApiPrivate.js";
+import { createBoard } from "../services/boardsServices";
 
-const CreateBoardForm = () => {
+const CreateBoardForm = ({ navigate }) => {
 	const {
 		register,
 		handleSubmit,
@@ -20,9 +25,21 @@ const CreateBoardForm = () => {
 		reset,
 	} = useForm();
 	const [open, handleOpen, handleClose] = useDialog(reset);
+	const api = useApiPrivate();
+
+	const {
+		mutate: postBoard,
+		isError,
+		error,
+	} = useMutation({
+		mutationFn: (data) => createBoard(api, data),
+		onSuccess: async (data) => {
+			navigate("/boards/" + data.data.board._id);
+		},
+	});
 
 	const onSubmit = handleSubmit((data) => {
-		console.log(data);
+		postBoard(data);
 		handleClose();
 	});
 
@@ -54,6 +71,11 @@ const CreateBoardForm = () => {
 						variant="standard"
 						fullWidth
 					/>
+					{isError && (
+						<Alert severity="error" sx={{ mt: 2 }}>
+							{error?.response?.data?.message || "Could not create the board"}
+						</Alert>
+					)}
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose}>Cancel</Button>
@@ -64,6 +86,10 @@ const CreateBoardForm = () => {
 			</Dialog>
 		</>
 	);
+};
+
+CreateBoardForm.propTypes = {
+	navigate: PropTypes.func.isRequired,
 };
 
 export default CreateBoardForm;

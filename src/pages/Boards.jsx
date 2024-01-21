@@ -1,14 +1,17 @@
 import { Alert, Box, Grid, Typography } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Star";
 import { amber } from "@mui/material/colors";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 import { Layout, CardBoard, CreateBoardForm } from "../components/";
-import { useQuery } from "@tanstack/react-query";
 import useApiPrivate from "../hooks/useApiPrivate";
 import { getBoards } from "../services/boardsServices";
 
 const Boards = () => {
 	const api = useApiPrivate();
+	const navigate = useNavigate();
+
 	const { data, isPending, isError } = useQuery({
 		queryKey: ["boards"],
 		queryFn: () => getBoards(api),
@@ -53,7 +56,7 @@ const Boards = () => {
 							<Typography component="h2" variant="h3">
 								Your boards
 							</Typography>
-							<CreateBoardForm />
+							<CreateBoardForm navigate={navigate} />
 						</Box>
 						{isPending ? (
 							<p>loading...</p>
