@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
-import { TextField, styled } from "@mui/material";
+import { TextField, Typography, styled } from "@mui/material";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import useApiPrivate from "../hooks/useApiPrivate";
+import { updateBoard } from "../services/boardsServices";
 
 const InputCardBoard = styled(TextField)({
 	".MuiInputBase-input": {
@@ -18,26 +22,44 @@ const InputBoardPage = styled(TextField)({
 	},
 });
 
-const EditableText = ({
-	textNode,
+const EditableBoardName = ({
 	isEditMode,
 	board,
 	handleBlur,
 	variant = "card-board",
 }) => {
-	const [text, setText] = useState(board.name);
+	const [name, setName] = useState(board.name);
 	const inputRef = useRef(null);
+	const api = useApiPrivate();
+	const queryClient = useQueryClient();
+
+	const { mutate: putBoard } = useMutation({
+		mutationFn: (data) => updateBoard(api, board._id, data),
+		onSuccess: async (response) => {
+			queryClient.setQueryData(["boards"], (oldData) => {
+				if (oldData == null) return [response];
+				const index = oldData.data.boards.findIndex(
+					(board) => board._id === response.data.board._id
+				);
+				oldData.data.boards[index].name = name;
+				return oldData;
+			});
+			queryClient.setQueryData(["board", board._id], (oldData) => {
+				return { ...oldData, data: { board: { ...board, name } } };
+			});
+		},
+	});
 
 	useEffect(() => {
 		if (inputRef.current) inputRef.current.focus();
 	}, [isEditMode]);
 
 	const handleChange = (e) => {
-		setText(e.target.value);
+		setName(e.target.value);
 	};
 
 	const handleCancel = () => {
-		setText(board.name);
+		setName(board.name);
 		handleBlur();
 	};
 
@@ -49,11 +71,12 @@ const EditableText = ({
 
 		if (e.key !== "Enter") return;
 
-		if (!text.trim() || text.length > 32) {
+		if (!name.trim() || name.length > 32 || name === board.name) {
 			handleCancel();
 			return;
 		}
 
+		putBoard({ name });
 		handleBlur();
 	};
 
@@ -63,11 +86,17 @@ const EditableText = ({
 	return (
 		<>
 			{!isEditMode ? (
-				textNode
+				variant === "card-board" ? (
+					<span>{board.name}</span>
+				) : (
+					<Typography component="h1" variant="h4">
+						{board.name}
+					</Typography>
+				)
 			) : (
 				<CustomInput
 					inputRef={inputRef}
-					value={text}
+					value={name}
 					onChange={handleChange}
 					onKeyDown={handleKeyDown}
 					onClick={(e) => {
@@ -82,8 +111,7 @@ const EditableText = ({
 	);
 };
 
-EditableText.propTypes = {
-	textNode: PropTypes.node.isRequired,
+EditableBoardName.propTypes = {
 	isEditMode: PropTypes.bool.isRequired,
 	board: PropTypes.shape({
 		_id: PropTypes.string.isRequired,
@@ -93,4 +121,4 @@ EditableText.propTypes = {
 	variant: PropTypes.oneOf(["card-board", "board-page"]),
 };
 
-export default EditableText;
+export default EditableBoardName;

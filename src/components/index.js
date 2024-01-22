@@ -6,7 +6,7 @@ import CardTask from "./CardTask.jsx";
 import ConfirmDeleteBoard from "./ConfirmDeleteBoard.jsx";
 import CreateBoardForm from "./CreateBoardForm.jsx";
 import CreateTaskForm from "./CreateTaskForm.jsx";
-import EditableText from "./EditableText.jsx";
+import EditableBoardName from "./EditableBoardName.jsx";
 import Layout from "./Layout.jsx";
 import Navbar from "./Navbar.jsx";
 import NavbarDrawer from "./NavbarDrawer.jsx";
@@ -25,7 +25,7 @@ export {
 	ConfirmDeleteBoard,
 	CreateBoardForm,
 	CreateTaskForm,
-	EditableText,
+	EditableBoardName,
 	Layout,
 	Navbar,
 	NavbarDrawer,

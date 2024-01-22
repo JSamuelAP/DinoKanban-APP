@@ -7,7 +7,7 @@ import { grey } from "@mui/material/colors";
 
 import dayjs from "../helpers/dayjs.js";
 import CardBoardMenu from "./CardBoardMenu.jsx";
-import EditableText from "./EditableText.jsx";
+import EditableBoardName from "./EditableBoardName.jsx";
 
 const CardBoard = ({ board }) => {
 	const navigate = useNavigate();
@@ -31,8 +31,7 @@ const CardBoard = ({ board }) => {
 					<CardHeader
 						avatar={<BoardIcon color="primary" sx={{ fontSize: "2.5rem" }} />}
 						title={
-							<EditableText
-								textNode={board.name}
+							<EditableBoardName
 								isEditMode={editMode}
 								board={board}
 								handleBlur={() => setEditMode(false)}

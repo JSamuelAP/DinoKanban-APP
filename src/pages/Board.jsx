@@ -4,7 +4,12 @@ import CalendarIcon from "@mui/icons-material/CalendarMonth";
 import { useQuery } from "@tanstack/react-query";
 import { Link as RouterLink, useParams } from "react-router-dom";
 
-import { Layout, CardBoardMenu, BoardList, EditableText } from "../components/";
+import {
+	Layout,
+	CardBoardMenu,
+	BoardList,
+	EditableBoardName,
+} from "../components/";
 import useApiPrivate from "../hooks/useApiPrivate.js";
 import { getBoard } from "../services/boardsServices.js";
 import dayjs from "../helpers/dayjs.js";
@@ -130,7 +135,7 @@ const Board = () => {
 	const api = useApiPrivate();
 
 	const { data, isLoading, isSuccess, isError } = useQuery({
-		queryKey: ["board"],
+		queryKey: ["board", id],
 		queryFn: () => getBoard(api, id),
 	});
 	const board = data?.data?.board || {};
@@ -177,12 +182,7 @@ const Board = () => {
 									justifyContent="space-between"
 									alignItems="start"
 								>
-									<EditableText
-										textNode={
-											<Typography component="h1" variant="h4">
-												{board.name}
-											</Typography>
-										}
+									<EditableBoardName
 										isEditMode={editMode}
 										board={board}
 										handleBlur={() => setEditMode(false)}

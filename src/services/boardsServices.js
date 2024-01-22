@@ -30,4 +30,9 @@ const createBoard = async (api, body) => {
 	return response.data;
 };
 
-export { getBoards, getBoard, createBoard };
+const updateBoard = async (api, id, body) => {
+	const response = await api.patch("boards/" + id, body);
+	return response.data;
+};
+
+export { getBoards, getBoard, createBoard, updateBoard };
