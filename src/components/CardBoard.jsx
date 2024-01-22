@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { Card, CardActionArea, CardHeader } from "@mui/material";
+import { Card, CardActionArea, CardHeader, styled } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BoardIcon from "@mui/icons-material/ViewKanban";
 import { grey } from "@mui/material/colors";
@@ -8,6 +8,12 @@ import { grey } from "@mui/material/colors";
 import dayjs from "../helpers/dayjs.js";
 import CardBoardMenu from "./CardBoardMenu.jsx";
 import EditableBoardName from "./EditableBoardName.jsx";
+
+const ResponsiveCardHeader = styled(CardHeader)({
+	".MuiCardHeader-content": {
+		width: 148,
+	},
+});
 
 const CardBoard = ({ board }) => {
 	const navigate = useNavigate();
@@ -28,7 +34,7 @@ const CardBoard = ({ board }) => {
 						navigate(`/boards/${board._id}`);
 					}}
 				>
-					<CardHeader
+					<ResponsiveCardHeader
 						avatar={<BoardIcon color="primary" sx={{ fontSize: "2.5rem" }} />}
 						title={
 							<EditableBoardName
@@ -39,7 +45,9 @@ const CardBoard = ({ board }) => {
 						}
 						titleTypographyProps={{ fontWeight: "500" }}
 						subheader={`Updated ${dayjs(board.updatedAt).fromNow()}`}
-						subheaderTypographyProps={{ noWrap: true, maxWidth: 148 }}
+						subheaderTypographyProps={{
+							noWrap: true,
+						}}
 						action={
 							<CardBoardMenu
 								board={board}
