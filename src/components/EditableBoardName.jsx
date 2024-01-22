@@ -37,7 +37,7 @@ const EditableBoardName = ({
 		mutationFn: (data) => updateBoard(api, board._id, data),
 		onSuccess: async (response) => {
 			queryClient.setQueryData(["boards"], (oldData) => {
-				if (oldData == null) return [response];
+				if (oldData == null) return { data: { boards: [] } };
 				const index = oldData.data.boards.findIndex(
 					(board) => board._id === response.data.board._id
 				);

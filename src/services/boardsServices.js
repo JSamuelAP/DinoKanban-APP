@@ -35,4 +35,9 @@ const updateBoard = async (api, id, body) => {
 	return response.data;
 };
 
-export { getBoards, getBoard, createBoard, updateBoard };
+const deleteBoard = async (api, id) => {
+	const response = await api.delete("boards/" + id);
+	return response.data;
+};
+
+export { getBoards, getBoard, createBoard, updateBoard, deleteBoard };

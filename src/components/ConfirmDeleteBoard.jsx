@@ -7,14 +7,33 @@ import {
 	DialogContentText,
 	DialogTitle,
 } from "@mui/material";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
+import useApiPrivate from "../hooks/useApiPrivate.js";
+import { deleteBoard } from "../services/boardsServices.js";
+
 const ConfirmDeleteBoard = ({ board, open, handleClose }) => {
+	const api = useApiPrivate();
+	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
+	const { mutate: delBoard } = useMutation({
+		mutationFn: () => deleteBoard(api, board._id),
+		onSuccess: (response) => {
+			queryClient.setQueryData(["boards"], (oldData) => {
+				if (oldData == null) return { data: { boards: [] } };
+				oldData.data.boards = oldData.data.boards.filter(
+					(board) => board._id !== response.data.board._id
+				);
+				return oldData;
+			});
+			navigate("/boards/");
+		},
+	});
+
 	const handleDelete = () => {
-		console.log("Deleting board ", board._id);
-		navigate("/boards/");
+		delBoard();
 		handleClose();
 	};
 
