@@ -46,6 +46,7 @@ const ConfirmDeleteBoard = ({ board, open, handleClose }) => {
 					handleClose();
 				}}
 				aria-labelledby="dialog-title"
+				onClick={(e) => e.stopPropagation()}
 			>
 				<DialogTitle id="dialog-title">Delete board</DialogTitle>
 				<DialogContent>
