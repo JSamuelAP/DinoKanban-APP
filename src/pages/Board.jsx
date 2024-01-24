@@ -12,6 +12,7 @@ import {
 } from "../components/";
 import useApiPrivate from "../hooks/useApiPrivate.js";
 import { getBoard } from "../services/boardsServices.js";
+import { getCards } from "../services/cardsServices.js";
 import dayjs from "../helpers/dayjs.js";
 
 const lists = [
@@ -20,114 +21,6 @@ const lists = [
 	{ name: "doing", title: "🏗️ Doing" },
 	{ name: "done", title: "✅ Done" },
 ];
-
-const tasks = {
-	backlog: [
-		{
-			id: "1",
-			title: "Task 1",
-			description:
-				"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente delectus aspernatur ea voluptates! Eveniet earum blanditiis mollitia magni iusto, impedit temporibus at nam modi, ullam quo! Culpa.",
-			list: "backlog",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-		{
-			id: "2",
-			title: "Task 2",
-			description: "",
-			list: "backlog",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-		{
-			id: "3",
-			title: "Task 3",
-			description: "",
-			list: "backlog",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-	],
-	todo: [
-		{
-			id: "4",
-			title: "Task 4",
-			description: "",
-			list: "todo",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-		{
-			id: "5",
-			title: "Task 5",
-			description: "",
-			list: "todo",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-		{
-			id: "6",
-			title: "Task 6",
-			description: "",
-			list: "todo",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-	],
-	doing: [
-		{
-			id: "7",
-			title: "Task 7",
-			description: "",
-			list: "doing",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-		{
-			id: "8",
-			title: "Task 8",
-			description: "",
-			list: "doing",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-		{
-			id: "9",
-			title: "Task 9",
-			description: "",
-			list: "doing",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-	],
-	done: [
-		{
-			id: "11",
-			title: "Task 11",
-			description: "",
-			list: "done",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-		{
-			id: "12",
-			title: "Task 12",
-			description: "",
-			list: "done",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-		{
-			id: "13",
-			title: "Task 13",
-			description: "",
-			list: "done",
-			createdAt: "2024-01-01T19:15:00.782Z",
-			updatedAt: "2024-01-04T19:15:00.782Z",
-		},
-	],
-};
 
 const Board = () => {
 	const { id } = useParams();
@@ -139,6 +32,17 @@ const Board = () => {
 		queryFn: () => getBoard(api, id),
 	});
 	const board = data?.data?.board || {};
+
+	const { dataCards } = useQuery({
+		queryKey: ["cards", "board", id],
+		queryFn: () => getCards(api, board._id),
+	});
+	const tasks = dataCards?.data?.cards || {
+		backlog: [],
+		todo: [],
+		doing: [],
+		done: [],
+	};
 
 	return (
 		<>
