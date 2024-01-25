@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import {
+	Alert,
 	Button,
 	DialogActions,
 	DialogContent,
@@ -8,7 +9,15 @@ import {
 	TextField,
 } from "@mui/material";
 
-const UpdateTaskForm = ({ task, closeEditMode, register, errors }) => {
+const UpdateTaskForm = ({
+	task,
+	closeEditMode,
+	register,
+	errors,
+	isLoading,
+	isError,
+	error,
+}) => {
 	return (
 		<>
 			<DialogContent>
@@ -60,11 +69,18 @@ const UpdateTaskForm = ({ task, closeEditMode, register, errors }) => {
 						<MenuItem value="doing">🏗️ Doing</MenuItem>
 						<MenuItem value="done">✅ Done</MenuItem>
 					</TextField>
+					{isError && (
+						<Alert severity="error">
+							{error?.response?.data?.message || "Could not update the task"}
+						</Alert>
+					)}
 				</Stack>
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={closeEditMode}>Cancel</Button>
-				<Button type="submit" variant="contained">
+				<Button onClick={closeEditMode} disabled={isLoading}>
+					Cancel
+				</Button>
+				<Button type="submit" variant="contained" disabled={isLoading}>
 					Update
 				</Button>
 			</DialogActions>
@@ -81,6 +97,9 @@ UpdateTaskForm.propTypes = {
 	closeEditMode: PropTypes.func.isRequired,
 	register: PropTypes.func.isRequired,
 	errors: PropTypes.object.isRequired,
+	isLoading: PropTypes.bool.isRequired,
+	isError: PropTypes.bool.isRequired,
+	error: PropTypes.object,
 };
 
 export default UpdateTaskForm;

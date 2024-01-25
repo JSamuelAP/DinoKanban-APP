@@ -101,7 +101,7 @@ const CreateTaskForm = ({ list, board }) => {
 							fullWidth
 						/>
 						{isError && (
-							<Alert severity="error" sx={{ mt: 2 }}>
+							<Alert severity="error">
 								{error?.response?.data?.message || "Could not create the task"}
 							</Alert>
 						)}

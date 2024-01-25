@@ -12,4 +12,9 @@ const createCard = async (api, body) => {
 	return response.data;
 };
 
-export { getCards, createCard };
+const updateCard = async (api, id, body) => {
+	const response = await api.patch("/cards/" + id, body);
+	return response.data;
+};
+
+export { getCards, createCard, updateCard };

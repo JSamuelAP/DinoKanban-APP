@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
 	Button,
@@ -13,10 +14,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import CalendarIcon from "@mui/icons-material/CalendarMonth";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import dayjs from "../helpers/dayjs.js";
-import { useState } from "react";
+import useApiPrivate from "../hooks/useApiPrivate.js";
+import { updateCard } from "../services/cardsServices.js";
 import UpdateTaskForm from "./UpdateTaskForm.jsx";
+import dayjs from "../helpers/dayjs.js";
 
 const TaskDialog = ({ task, open, handleClose }) => {
 	const [editMode, setEditMode] = useState(false);
@@ -26,6 +29,8 @@ const TaskDialog = ({ task, open, handleClose }) => {
 		formState: { errors },
 		reset,
 	} = useForm();
+	const api = useApiPrivate();
+	const queryClient = useQueryClient();
 
 	const handleCloseForm = () => {
 		setEditMode(false);
@@ -37,10 +42,25 @@ const TaskDialog = ({ task, open, handleClose }) => {
 		handleCloseForm();
 	};
 
+	const {
+		mutate: updateTask,
+		isPending,
+		isError,
+		error,
+	} = useMutation({
+		mutationFn: (data) => updateCard(api, data.id, data),
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: ["cards", "board", task.board],
+			});
+			handleCloseAll();
+		},
+	});
+
 	const onSubmit = handleSubmit((data) => {
+		data.id = task._id;
 		if (!data.description) delete data.description;
-		console.log(data);
-		handleCloseAll();
+		updateTask(data);
 	});
 
 	return (
@@ -129,6 +149,9 @@ const TaskDialog = ({ task, open, handleClose }) => {
 						closeEditMode={handleCloseForm}
 						register={register}
 						errors={errors}
+						isLoading={isPending}
+						isError={isError}
+						error={error}
 					/>
 				)}
 			</Dialog>
@@ -141,6 +164,7 @@ TaskDialog.propTypes = {
 		_id: PropTypes.string.isRequired,
 		title: PropTypes.string.isRequired,
 		description: PropTypes.string,
+		board: PropTypes.string.isRequired,
 		list: PropTypes.oneOf(["backlog", "todo", "doing", "done"]),
 		createdAt: PropTypes.string.isRequired,
 		updatedAt: PropTypes.string.isRequired,
