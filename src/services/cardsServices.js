@@ -17,4 +17,9 @@ const updateCard = async (api, id, body) => {
 	return response.data;
 };
 
-export { getCards, createCard, updateCard };
+const deleteCard = async (api, id) => {
+	const response = await api.delete("/cards/" + id);
+	return response.data;
+};
+
+export { getCards, createCard, updateCard, deleteCard };

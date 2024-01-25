@@ -17,7 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import useApiPrivate from "../hooks/useApiPrivate.js";
-import { updateCard } from "../services/cardsServices.js";
+import { updateCard, deleteCard } from "../services/cardsServices.js";
 import UpdateTaskForm from "./UpdateTaskForm.jsx";
 import dayjs from "../helpers/dayjs.js";
 
@@ -57,11 +57,23 @@ const TaskDialog = ({ task, open, handleClose }) => {
 		},
 	});
 
+	const { mutate: deleteTask, isPending: isDeleting } = useMutation({
+		mutationFn: (data) => deleteCard(api, data),
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: ["cards", "board", task.board],
+			});
+			handleCloseAll();
+		},
+	});
+
 	const onSubmit = handleSubmit((data) => {
 		data.id = task._id;
 		if (!data.description) delete data.description;
 		updateTask(data);
 	});
+
+	const handleDelete = () => deleteTask(task._id);
 
 	return (
 		<>
@@ -126,10 +138,11 @@ const TaskDialog = ({ task, open, handleClose }) => {
 						</DialogContent>
 						<DialogActions>
 							<Button
-								onClick={handleClose}
+								onClick={handleDelete}
 								color="error"
 								startIcon={<DeleteIcon />}
 								variant="contained"
+								disabled={isDeleting}
 							>
 								Delete
 							</Button>
@@ -138,6 +151,7 @@ const TaskDialog = ({ task, open, handleClose }) => {
 								color="info"
 								startIcon={<EditIcon />}
 								variant="contained"
+								disabled={isDeleting}
 							>
 								Edit
 							</Button>
