@@ -33,7 +33,7 @@ const Board = () => {
 	});
 	const board = data?.data?.board || {};
 
-	const { dataCards } = useQuery({
+	const { data: dataCards } = useQuery({
 		queryKey: ["cards", "board", id],
 		queryFn: () => getCards(api, board._id),
 	});

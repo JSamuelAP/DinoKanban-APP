@@ -27,7 +27,7 @@ const CardTask = ({ task }) => {
 
 CardTask.propTypes = {
 	task: PropTypes.shape({
-		id: PropTypes.string.isRequired,
+		_id: PropTypes.string.isRequired,
 		title: PropTypes.string.isRequired,
 	}),
 };

@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import {
+	Alert,
 	Button,
 	Dialog,
 	DialogActions,
@@ -10,8 +11,11 @@ import {
 	TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import useDialog from "../hooks/useDialog";
+import useApiPrivate from "../hooks/useApiPrivate";
+import { createCard } from "../services/cardsServices";
 
 const CreateTaskForm = ({ list, board }) => {
 	const {
@@ -21,6 +25,23 @@ const CreateTaskForm = ({ list, board }) => {
 		reset,
 	} = useForm();
 	const [open, handleOpen, handleClose] = useDialog(reset);
+	const api = useApiPrivate();
+	const queryClient = useQueryClient();
+
+	const {
+		mutate: createTask,
+		isPending,
+		isError,
+		error,
+	} = useMutation({
+		mutationFn: (data) => createCard(api, data),
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: ["cards", "board", board],
+			});
+			handleClose();
+		},
+	});
 
 	const onSubmit = handleSubmit((data) => {
 		data.board = board;
@@ -28,8 +49,7 @@ const CreateTaskForm = ({ list, board }) => {
 
 		if (!data.description) delete data.description;
 
-		console.log(data);
-		handleClose();
+		createTask(data);
 	});
 
 	return (
@@ -80,11 +100,18 @@ const CreateTaskForm = ({ list, board }) => {
 							minRows={3}
 							fullWidth
 						/>
+						{isError && (
+							<Alert severity="error" sx={{ mt: 2 }}>
+								{error?.response?.data?.message || "Could not create the task"}
+							</Alert>
+						)}
 					</Stack>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={handleClose}>Cancel</Button>
-					<Button type="submit" variant="contained">
+					<Button onClick={handleClose} disabled={isPending}>
+						Cancel
+					</Button>
+					<Button type="submit" variant="contained" disabled={isPending}>
 						Create
 					</Button>
 				</DialogActions>

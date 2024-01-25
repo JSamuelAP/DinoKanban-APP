@@ -7,4 +7,9 @@ const getCards = async (api, boardID) => {
 	return response.data;
 };
 
-export { getCards };
+const createCard = async (api, body) => {
+	const response = await api.post("/cards", body);
+	return response.data;
+};
+
+export { getCards, createCard };
