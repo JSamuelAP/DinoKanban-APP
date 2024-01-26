@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import CalendarIcon from "@mui/icons-material/CalendarMonth";
-import { useQuery } from "@tanstack/react-query";
+import { DragDropContext } from "react-beautiful-dnd";
 import { Link as RouterLink, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 import {
 	Layout,
@@ -35,13 +36,42 @@ const Board = () => {
 
 	const { data: dataCards } = useQuery({
 		queryKey: ["cards", "board", id],
-		queryFn: () => getCards(api, board._id),
+		queryFn: () => getCards(api, id),
 	});
 	const tasks = dataCards?.data?.cards || {
 		backlog: [],
 		todo: [],
 		doing: [],
 		done: [],
+	};
+
+	const handleDragStart = ({ source }, provided) => {
+		provided.announce(`You have lifted the task in position ${source.index}`);
+	};
+
+	const handleDragUpdate = ({ destination }, provided) => {
+		provided.announce(
+			destination
+				? `You have moved the task to position ${destination.index}`
+				: `You are currently not over a droppable area`
+		);
+	};
+	const handleDragEnd = ({ source, destination }, provided) => {
+		provided.announce(
+			destination
+				? `You have moved the task to position ${source.index} to ${destination.index}`
+				: `The task has been returned to its starting position of ${source.index}`
+		);
+
+		if (!destination) return;
+		if (
+			destination.droppableId === source.droppableId &&
+			destination.index === source.index
+		)
+			return;
+
+		console.log("update order");
+		// TODO: Update order in API
 	};
 
 	return (
@@ -115,16 +145,22 @@ const Board = () => {
 								<Divider />
 							</Box>
 							<Box component="section" mt={4}>
-								<Grid container spacing={{ xs: 2, md: 3 }}>
-									{lists.map(({ name, title }) => (
-										<Grid item xs={12} sm={6} md={3} key={name}>
-											<BoardList
-												list={{ name, title, tasks: tasks[name] }}
-												board={board._id}
-											/>
-										</Grid>
-									))}
-								</Grid>
+								<DragDropContext
+									onDragStart={handleDragStart}
+									onDragUpdate={handleDragUpdate}
+									onDragEnd={handleDragEnd}
+								>
+									<Grid container spacing={{ xs: 2, md: 3 }}>
+										{lists.map(({ name, title }) => (
+											<Grid item xs={12} sm={6} md={3} key={name}>
+												<BoardList
+													list={{ name, title, tasks: tasks[name] }}
+													board={board._id}
+												/>
+											</Grid>
+										))}
+									</Grid>
+								</DragDropContext>
 							</Box>
 						</>
 					)}
