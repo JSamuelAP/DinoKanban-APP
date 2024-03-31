@@ -3,7 +3,7 @@ import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import CalendarIcon from "@mui/icons-material/CalendarMonth";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Link as RouterLink, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
 	Layout,
@@ -13,8 +13,9 @@ import {
 } from "../components/";
 import useApiPrivate from "../hooks/useApiPrivate.js";
 import { getBoard } from "../services/boardsServices.js";
-import { getCards } from "../services/cardsServices.js";
+import { getCards, updateCard } from "../services/cardsServices.js";
 import dayjs from "../helpers/dayjs.js";
+import { findTaskById } from "../helpers/tasks.js";
 
 const lists = [
 	{ name: "backlog", title: "💡 Backlog" },
@@ -27,6 +28,7 @@ const Board = () => {
 	const { id } = useParams();
 	const [editMode, setEditMode] = useState(false);
 	const api = useApiPrivate();
+	const queryClient = useQueryClient();
 
 	const { data, isLoading, isSuccess, isError } = useQuery({
 		queryKey: ["board", id],
@@ -45,6 +47,66 @@ const Board = () => {
 		done: [],
 	};
 
+	const { mutate: updateTask } = useMutation({
+		mutationFn: (data) => updateCard(api, data.id, data),
+		onMutate: async (data) => {
+			await queryClient.cancelQueries(["cards", "board", id]);
+			const previousData = queryClient.getQueryData(["cards", "board", id]);
+
+			await queryClient.setQueryData(["cards", "board", id], (oldData) => {
+				let lists = oldData.data.cards;
+				const task = findTaskById(lists, data.id);
+
+				if (data.list !== task.list) {
+					// Moved to a different list
+					// -1 order in tasks with greater than order in original list
+					lists[task.list] = lists[task.list].map((t) => {
+						if (t.order > task.order) t.order--;
+						return t;
+					});
+					lists[task.list].splice(task.order - 1, 1); // Delete task from original list
+					// +1 order in tasks with greater than or equal in destination list
+					lists[data.list] = lists[data.list].map((t) => {
+						if (t.order >= task.order) t.order++;
+						return t;
+					});
+					lists[data.list].splice(data.order - 1, 0, task); // Insert task in destination list
+				} else {
+					// Moved to a different position inside same list
+					if (data.order < task.order) {
+						// Move to a higher position
+						// +1 order in task with greater than or equal order of original order
+						// and less than new order
+						lists[task.list] = lists[task.list].map((t) => {
+							if (t.order >= task.order && t.order < data.order) t.order++;
+							return t;
+						});
+					} else if (data.order > task.order) {
+						// Move to a lower position
+						// -1 order in task with greater than new order and less than or equal of original order
+						lists[task.list] = lists[task.list].map((t) => {
+							if (t.order > data.order && t.order <= task.order) t.order--;
+							return t;
+						});
+					}
+					lists[task.list].splice(task.order - 1, 1); // Delete task from list
+					lists[task.list].splice(data.order - 1, 0, task); // Insert task in new position
+				}
+
+				return { ...oldData, data: { cards: lists } };
+			});
+
+			return { previousData };
+		},
+		onError: (context) => {
+			if (context?.previousData != null)
+				queryClient.setQueryData(["cards", "board", id], context.previousData);
+		},
+		onSettled: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["cards", "board", id] });
+		},
+	});
+
 	const handleDragStart = ({ source }, provided) => {
 		provided.announce(`You have lifted the task in position ${source.index}`);
 	};
@@ -52,14 +114,17 @@ const Board = () => {
 	const handleDragUpdate = ({ destination }, provided) => {
 		provided.announce(
 			destination
-				? `You have moved the task to position ${destination.index}`
+				? `You have moved the task to position ${destination.index || 1}`
 				: `You are currently not over a droppable area`
 		);
 	};
-	const handleDragEnd = ({ source, destination }, provided) => {
+
+	const handleDragEnd = ({ source, destination, draggableId }, provided) => {
 		provided.announce(
 			destination
-				? `You have moved the task to position ${source.index} to ${destination.index}`
+				? `You have moved the task to position ${source.index} to ${
+						destination.index || 1
+				  }`
 				: `The task has been returned to its starting position of ${source.index}`
 		);
 
@@ -70,8 +135,12 @@ const Board = () => {
 		)
 			return;
 
-		console.log("update order");
-		// TODO: Update order in API
+		const data = {
+			id: draggableId,
+			list: destination.droppableId,
+			order: destination.index || 1,
+		};
+		updateTask(data);
 	};
 
 	return (

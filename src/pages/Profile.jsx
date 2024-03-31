@@ -32,10 +32,10 @@ const Profile = () => {
 							maxWidth="100%"
 						>
 							<Typography component="h2" variant="h3" fontWeight={500}>
-								{user.username}
+								{user?.username}
 							</Typography>
 							<Typography component="h3" variant="h4" noWrap>
-								{user.email}
+								{user?.email}
 							</Typography>
 						</Box>
 					</Box>
@@ -48,7 +48,7 @@ const Profile = () => {
 							fontSize="large"
 							sx={{ verticalAlign: "bottom", mr: 0.5 }}
 						/>
-						Created at {dayjs(user.createdAt).format("dddd, MMMM DD, YYYY")}
+						Created at {dayjs(user?.createdAt).format("dddd, MMMM DD, YYYY")}
 					</Typography>
 				</Box>
 			</Layout>
