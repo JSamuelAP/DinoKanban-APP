@@ -18,7 +18,7 @@ const ProfileBox = ({ minWidth = 0, maxWidth = 300 }) => {
 				maxWidth={maxWidth}
 			>
 				<Typography fontWeight={500} noWrap>
-					{user.username}
+					{user?.username}
 				</Typography>
 				<Typography
 					variant="caption"
@@ -27,7 +27,7 @@ const ProfileBox = ({ minWidth = 0, maxWidth = 300 }) => {
 					noWrap
 					overflow="visible"
 				>
-					{user.email}
+					{user?.email}
 				</Typography>
 			</Box>
 		</Box>
