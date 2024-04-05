@@ -15,9 +15,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import useDialog from "../hooks/useDialog";
 import useApiPrivate from "../hooks/useApiPrivate";
-import { createCard } from "../services/cardsServices";
+import { createTask } from "../services/tasksServices";
 
-const CreateTaskForm = ({ list, board }) => {
+const CreateTaskForm = ({ status, board }) => {
 	const {
 		register,
 		handleSubmit,
@@ -29,15 +29,15 @@ const CreateTaskForm = ({ list, board }) => {
 	const queryClient = useQueryClient();
 
 	const {
-		mutate: createTask,
+		mutate: insertTask,
 		isPending,
 		isError,
 		error,
 	} = useMutation({
-		mutationFn: (data) => createCard(api, data),
+		mutationFn: (data) => createTask(api, data),
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ["cards", "board", board],
+				queryKey: ["tasks", "board", board],
 			});
 			handleClose();
 		},
@@ -45,11 +45,11 @@ const CreateTaskForm = ({ list, board }) => {
 
 	const onSubmit = handleSubmit((data) => {
 		data.board = board;
-		data.list = list;
+		data.status = status;
 
 		if (!data.description) delete data.description;
 
-		createTask(data);
+		insertTask(data);
 	});
 
 	return (
@@ -66,7 +66,7 @@ const CreateTaskForm = ({ list, board }) => {
 				fullWidth
 			>
 				<DialogTitle id="dialog-title">
-					Create new task in {list} list
+					Create new task in {status} status
 				</DialogTitle>
 				<DialogContent>
 					<Stack spacing={2}>
@@ -121,7 +121,7 @@ const CreateTaskForm = ({ list, board }) => {
 };
 
 CreateTaskForm.propTypes = {
-	list: PropTypes.oneOf(["backlog", "todo", "doing", "done"]),
+	status: PropTypes.oneOf(["backlog", "todo", "doing", "done"]),
 	board: PropTypes.string.isRequired,
 };
 

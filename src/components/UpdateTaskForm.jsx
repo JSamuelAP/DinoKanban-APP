@@ -56,9 +56,9 @@ const UpdateTaskForm = ({
 					/>
 					<TextField
 						select
-						{...register("list")}
-						label="List"
-						defaultValue={task.list}
+						{...register("status")}
+						label="Status"
+						defaultValue={task.status}
 						error={!!errors.description}
 						helperText={errors.description?.message}
 						variant="standard"
@@ -92,7 +92,7 @@ UpdateTaskForm.propTypes = {
 	task: PropTypes.shape({
 		title: PropTypes.string.isRequired,
 		description: PropTypes.string,
-		list: PropTypes.oneOf(["backlog", "todo", "doing", "done"]),
+		status: PropTypes.oneOf(["backlog", "todo", "doing", "done"]),
 	}).isRequired,
 	closeEditMode: PropTypes.func.isRequired,
 	register: PropTypes.func.isRequired,

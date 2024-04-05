@@ -1,9 +1,9 @@
-const findTaskById = (lists, id) => {
+const findTaskById = (statues, id) => {
 	const tasks = [
-		...lists.backlog,
-		...lists.todo,
-		...lists.doing,
-		...lists.done,
+		...statues.backlog,
+		...statues.todo,
+		...statues.doing,
+		...statues.done,
 	];
 	return tasks.find((task) => task._id === id);
 };

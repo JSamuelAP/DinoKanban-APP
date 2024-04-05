@@ -5,7 +5,7 @@ import { Droppable } from "react-beautiful-dnd";
 import CardTask from "./CardTask";
 import CreateTaskForm from "./CreateTaskForm";
 
-const BoardList = ({ list: { name, title, tasks }, board }) => {
+const BoardStatusColumn = ({ status: { name, title, tasks }, board }) => {
 	return (
 		<>
 			<Card>
@@ -34,15 +34,15 @@ const BoardList = ({ list: { name, title, tasks }, board }) => {
 							</Stack>
 						)}
 					</Droppable>
-					<CreateTaskForm list={name} board={board} />
+					<CreateTaskForm status={name} board={board} />
 				</CardContent>
 			</Card>
 		</>
 	);
 };
 
-BoardList.propTypes = {
-	list: PropTypes.shape({
+BoardStatusColumn.propTypes = {
+	status: PropTypes.shape({
 		name: PropTypes.oneOf(["backlog", "todo", "doing", "done"]),
 		title: PropTypes.string.isRequired,
 		tasks: PropTypes.arrayOf(
@@ -55,4 +55,4 @@ BoardList.propTypes = {
 	board: PropTypes.string.isRequired,
 };
 
-export default BoardList;
+export default BoardStatusColumn;

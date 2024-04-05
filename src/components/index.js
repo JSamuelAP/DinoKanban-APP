@@ -1,5 +1,5 @@
 import AccountMenu from "./AccountMenu.jsx";
-import BoardList from "./BoardList.jsx";
+import BoardStatusColumn from "./BoardStatusColumn.jsx";
 import CardBoard from "./CardBoard.jsx";
 import CardBoardMenu from "./CardBoardMenu.jsx";
 import CardTask from "./CardTask.jsx";
@@ -18,7 +18,7 @@ import UpdateTaskForm from "./UpdateTaskForm.jsx";
 
 export {
 	AccountMenu,
-	BoardList,
+	BoardStatusColumn,
 	CardBoard,
 	CardBoardMenu,
 	CardTask,

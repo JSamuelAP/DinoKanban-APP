@@ -17,7 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import useApiPrivate from "../hooks/useApiPrivate.js";
-import { updateCard, deleteCard } from "../services/cardsServices.js";
+import { updateTask, deleteTask } from "../services/tasksServices.js";
 import UpdateTaskForm from "./UpdateTaskForm.jsx";
 import dayjs from "../helpers/dayjs.js";
 
@@ -43,25 +43,25 @@ const TaskDialog = ({ task, open, handleClose }) => {
 	};
 
 	const {
-		mutate: updateTask,
+		mutate: editTask,
 		isPending,
 		isError,
 		error,
 	} = useMutation({
-		mutationFn: (data) => updateCard(api, data.id, data),
+		mutationFn: (data) => updateTask(api, data.id, data),
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ["cards", "board", task.board],
+				queryKey: ["tasks", "board", task.board],
 			});
 			handleCloseAll();
 		},
 	});
 
-	const { mutate: deleteTask, isPending: isDeleting } = useMutation({
-		mutationFn: (data) => deleteCard(api, data),
+	const { mutate: dropTask, isPending: isDeleting } = useMutation({
+		mutationFn: (data) => deleteTask(api, data),
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ["cards", "board", task.board],
+				queryKey: ["tasks", "board", task.board],
 			});
 			handleCloseAll();
 		},
@@ -70,10 +70,10 @@ const TaskDialog = ({ task, open, handleClose }) => {
 	const onSubmit = handleSubmit((data) => {
 		data.id = task._id;
 		if (!data.description) delete data.description;
-		updateTask(data);
+		editTask(data);
 	});
 
-	const handleDelete = () => deleteTask(task._id);
+	const handleDelete = () => dropTask(task._id);
 
 	return (
 		<>
@@ -104,7 +104,7 @@ const TaskDialog = ({ task, open, handleClose }) => {
 					<>
 						<DialogContent sx={{ pt: 0 }}>
 							<Typography variant="body2" color={"GrayText"} mb={2}>
-								On the {task.list} list
+								On the {task.status} status
 							</Typography>
 							<Typography
 								component="time"
@@ -179,7 +179,7 @@ TaskDialog.propTypes = {
 		title: PropTypes.string.isRequired,
 		description: PropTypes.string,
 		board: PropTypes.string.isRequired,
-		list: PropTypes.oneOf(["backlog", "todo", "doing", "done"]),
+		status: PropTypes.oneOf(["backlog", "todo", "doing", "done"]),
 		createdAt: PropTypes.string.isRequired,
 		updatedAt: PropTypes.string.isRequired,
 	}),
