@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import useApiPrivate from "../hooks/useApiPrivate.js";
 import { deleteBoard } from "../services/boardsServices.js";
@@ -17,18 +17,28 @@ const ConfirmDeleteBoard = ({ board, open, handleClose }) => {
 	const api = useApiPrivate();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const { mutate: delBoard } = useMutation({
 		mutationFn: () => deleteBoard(api, board._id),
-		onSuccess: (response) => {
-			queryClient.setQueryData(["boards"], (oldData) => {
-				if (oldData == null) return { data: { boards: [] } };
-				oldData.data.boards = oldData.data.boards.filter(
-					(board) => board._id !== response.data.board._id
-				);
-				return oldData;
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: ["boards"] });
+			const previousData = queryClient.getQueryData(["boards"]);
+
+			await queryClient.setQueryData(["boards"], (oldBoards) => {
+				if (oldBoards == null) return [];
+				return oldBoards.filter((b) => b._id !== board._id);
 			});
-			navigate("/boards/");
+
+			if (location.pathname !== "/boards") navigate("/boards");
+			return { previousData };
+		},
+		onError: (error, variables, context) => {
+			if (context.previousData != null)
+				queryClient.setQueriesData(["board"], context.previousData);
+		},
+		onSettled: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["boards"] });
 		},
 	});
 
