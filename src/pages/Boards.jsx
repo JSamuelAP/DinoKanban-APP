@@ -12,12 +12,15 @@ const Boards = () => {
 	const api = useApiPrivate();
 	const navigate = useNavigate();
 
-	const { data, isPending, isError } = useQuery({
+	const {
+		data: boards,
+		isPending,
+		isError,
+	} = useQuery({
 		queryKey: ["boards"],
 		queryFn: () => getBoards(api),
 		retry: 0,
 	});
-	const boards = data?.data?.boards || [];
 
 	return (
 		<>

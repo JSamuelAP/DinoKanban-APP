@@ -30,22 +30,20 @@ const Board = () => {
 	const api = useApiPrivate();
 	const queryClient = useQueryClient();
 
-	const { data, isLoading, isSuccess, isError } = useQuery({
+	const {
+		data: board,
+		isLoading,
+		isSuccess,
+		isError,
+	} = useQuery({
 		queryKey: ["board", id],
 		queryFn: () => getBoard(api, id),
 	});
-	const board = data?.data?.board || {};
 
-	const { data: dataTasks } = useQuery({
+	const { data: tasks } = useQuery({
 		queryKey: ["tasks", "board", id],
 		queryFn: () => getTasks(api, id),
 	});
-	const tasks = dataTasks?.data?.tasks || {
-		backlog: [],
-		todo: [],
-		doing: [],
-		done: [],
-	};
 
 	const { mutate: editTask } = useMutation({
 		mutationFn: (data) => updateTask(api, data.id, data),

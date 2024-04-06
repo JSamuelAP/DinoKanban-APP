@@ -4,7 +4,14 @@ const getTasks = async (api, boardID) => {
 			board: boardID,
 		},
 	});
-	return response.data;
+	return (
+		response.data?.data?.tasks || {
+			backlog: [],
+			todo: [],
+			doing: [],
+			done: [],
+		}
+	);
 };
 
 const createTask = async (api, body) => {
@@ -17,7 +24,6 @@ const updateTask = async (api, id, body) => {
 	return response.data;
 };
 
-// TODO: fix bug when middle task is deleted
 const deleteTask = async (api, id) => {
 	const response = await api.delete("/tasks/" + id);
 	return response.data;

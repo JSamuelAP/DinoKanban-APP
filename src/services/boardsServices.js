@@ -12,7 +12,7 @@ const getBoards = async (api) => {
 			return data;
 		}),
 	});
-	return response.data;
+	return response.data?.data?.boards || [];
 };
 
 const getBoard = async (api, id) => {
@@ -22,7 +22,7 @@ const getBoard = async (api, id) => {
 			return data;
 		}),
 	});
-	return response.data;
+	return response.data?.data?.board || {};
 };
 
 const createBoard = async (api, body) => {
