@@ -47,6 +47,9 @@ const Board = () => {
 
 	const { mutate: editTask } = useMutation({
 		mutationFn: (data) => updateTask(api, data.id, data),
+		onMutate: async () => {
+			return { previousData: queryClient.getQueryData(["tasks", "board", id]) };
+		},
 		onError: (context) => {
 			if (context?.previousData != null)
 				queryClient.setQueryData(["tasks", "board", id], context.previousData);

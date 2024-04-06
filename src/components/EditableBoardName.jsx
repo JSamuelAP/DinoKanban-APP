@@ -35,18 +35,18 @@ const EditableBoardName = ({
 
 	const { mutate: putBoard } = useMutation({
 		mutationFn: (data) => updateBoard(api, board._id, data),
-		onSuccess: async (response) => {
-			queryClient.setQueryData(["boards"], (oldData) => {
-				if (oldData == null) return { data: { boards: [] } };
-				const index = oldData.data.boards.findIndex(
-					(board) => board._id === response.data.board._id
-				);
-				oldData.data.boards[index].name = name;
-				return oldData;
-			});
-			queryClient.setQueryData(["board", board._id], (oldData) => {
-				return { ...oldData, data: { board: { ...board, name } } };
-			});
+		onMutate: async (data) => {
+			const previousData = queryClient.getQueryData(["boards"]);
+			setName(data.name);
+			board.name = name;
+			return { previousData };
+		},
+		onError: (error, variables, context) => {
+			if (context.previousData != null)
+				queryClient.setQueriesData(["board"], context.previousData);
+		},
+		onSettled: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["boards"] });
 		},
 	});
 
