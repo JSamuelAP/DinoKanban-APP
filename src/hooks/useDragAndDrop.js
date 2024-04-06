@@ -41,54 +41,76 @@ const useDragAndDrop = (boardID, onDragEnd) => {
 			status: destination.droppableId,
 			destination: destination.index || 1,
 		};
-
-		// await queryClient.setQueryData(["tasks", "board", boardID], (oldData) => {
-		// 	const lists = oldData.data.tasks;
-		// 	const taskToUpdate = findTaskById(lists, taskUpdated.id);
-
-		// 	if (taskUpdated.list !== taskToUpdate.list) {
-		// 		// Moved to a different list
-		// 		// -1 order in tasks with greater than order in original list
-		// 		lists[taskToUpdate.list] = lists[taskToUpdate.list].map((t) => {
-		// 			if (t.order > taskToUpdate.order) t.order--;
-		// 			return t;
-		// 		});
-		// 		lists[taskToUpdate.list].splice(taskToUpdate.order - 1, 1); // Delete task from original list
-		// 		// +1 order in tasks with greater than or equal in destination list
-		// 		lists[taskUpdated.list] = lists[taskUpdated.list].map((t) => {
-		// 			if (t.order >= taskToUpdate.order) t.order++;
-		// 			return t;
-		// 		});
-		// 		lists[taskUpdated.list].splice(taskUpdated.order - 1, 0, taskToUpdate); // Insert task in destination list
-		// 	} else {
-		// 		console.log(taskToUpdate.order + "->" + taskUpdated.order);
-		// 		// Moved to a different position inside same list
-		// 		if (taskUpdated.order < taskToUpdate.order) {
-		// 			// Move to a higher position
-		// 			// +1 order in task with greater than or equal order of original order
-		// 			// and less than new order
-		// 			lists[taskToUpdate.list] = lists[taskToUpdate.list].map((t) => {
-		// 				if (t.order >= taskToUpdate.order && t.order < taskUpdated.order)
-		// 					t.order++;
-		// 				return t;
-		// 			});
-		// 		} else if (taskUpdated.order > taskToUpdate.order) {
-		// 			// Move to a lower position
-		// 			// -1 order in task with greater than new order and less than or equal of original order
-		// 			lists[taskToUpdate.list] = lists[taskToUpdate.list].map((t) => {
-		// 				if (t.order > taskUpdated.order && t.order <= taskToUpdate.order)
-		// 					t.order--;
-		// 				return t;
-		// 			});
-		// 		}
-		// 		lists[taskToUpdate.list].splice(taskToUpdate.order - 1, 1); // Delete task from list
-		// 		lists[taskToUpdate.list].splice(taskUpdated.order - 1, 0, taskToUpdate); // Insert task in new position
-		// 	}
-
-		// 	return { ...oldData, data: { tasks: lists } };
-		// });
-
 		onDragEnd(taskUpdated);
+
+		await queryClient.cancelQueries({ queryKey: ["tasks", "board", boardID] });
+		await queryClient.setQueryData(["tasks", "board", boardID], (oldTasks) => {
+			const taskToUpdate = findTaskById(oldTasks, taskUpdated.id);
+			const sourceStatus = taskToUpdate.status;
+			const destinationStatus = taskUpdated.status;
+
+			if (destinationStatus !== sourceStatus) {
+				// Moved to a different status
+
+				// Delete task from original status
+				oldTasks[sourceStatus].splice(taskToUpdate.order - 1, 1);
+
+				// +1 order in tasks with greater than or equal in destination status
+				oldTasks[destinationStatus] = oldTasks[destinationStatus].map((t) => {
+					if (t.order >= taskToUpdate.order) t.order++;
+					return t;
+				});
+				// Insert task in destination status
+				oldTasks[destinationStatus].splice(
+					taskUpdated.destination - 1,
+					0,
+					taskToUpdate
+				);
+			} else {
+				// Moved to a different position inside same status
+
+				const direction =
+					taskUpdated.destination < taskToUpdate.order ? "up" : "down";
+
+				if (direction === "up") {
+					// Move to a higher position
+
+					// +1 order in task with greater than or equal order of new order
+					// and less than original order
+					oldTasks[sourceStatus] = oldTasks[sourceStatus].map((t) => {
+						if (
+							t.order >= taskUpdated.destination &&
+							t.order < taskToUpdate.order
+						)
+							t.order++;
+						return t;
+					});
+				} else if (direction === "down") {
+					// Move to a lower position
+
+					// -1 order in task with greater than original order and less than or equal of new order
+					oldTasks[sourceStatus] = oldTasks[sourceStatus].map((t) => {
+						if (
+							t.order > taskToUpdate.order &&
+							t.order <= taskUpdated.destination
+						)
+							t.order--;
+						return t;
+					});
+				}
+
+				// Delete task from status
+				oldTasks[sourceStatus].splice(taskToUpdate.order - 1, 1);
+				// Insert task in new position
+				oldTasks[sourceStatus].splice(
+					taskUpdated.destination - 1,
+					0,
+					taskToUpdate
+				);
+			}
+
+			return oldTasks;
+		});
 	};
 
 	return {

@@ -30,7 +30,7 @@ const CardTask = ({ task }) => {
 						aria-roledescription="Press space bar to lift the task"
 						onClick={handleOpen}
 					>
-						{task.title} ({task.order})
+						{task.title}
 					</StyledButton>
 				)}
 			</Draggable>
