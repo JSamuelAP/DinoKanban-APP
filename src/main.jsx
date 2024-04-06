@@ -16,13 +16,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-	// <React.StrictMode>
-	<ThemeProvider theme={theme}>
-		<QueryClientProvider client={queryClient}>
-			<CssBaseline />
-			<App />
-			<ReactQueryDevtools />
-		</QueryClientProvider>
-	</ThemeProvider>
-	// </React.StrictMode>
+	<React.StrictMode>
+		<ThemeProvider theme={theme}>
+			<QueryClientProvider client={queryClient}>
+				<CssBaseline />
+				<App />
+				<ReactQueryDevtools />
+			</QueryClientProvider>
+		</ThemeProvider>
+	</React.StrictMode>
 );

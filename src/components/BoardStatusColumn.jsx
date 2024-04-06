@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Card, CardContent, CardHeader, Stack } from "@mui/material";
 import { Droppable } from "react-beautiful-dnd";
@@ -6,6 +7,19 @@ import CardTask from "./CardTask";
 import CreateTaskForm from "./CreateTaskForm";
 
 const BoardStatusColumn = ({ status: { name, title, tasks }, board }) => {
+	const [enabled, setEnabled] = useState(false);
+
+	useEffect(() => {
+		const animation = requestAnimationFrame(() => setEnabled(true));
+
+		return () => {
+			cancelAnimationFrame(animation);
+			setEnabled(false);
+		};
+	}, []);
+
+	if (!enabled) return null;
+
 	return (
 		<>
 			<Card>
