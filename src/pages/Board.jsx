@@ -40,7 +40,7 @@ const Board = () => {
 		queryFn: () => getBoard(api, id),
 	});
 
-	const { data: tasks } = useQuery({
+	const { data: tasks, isSuccess: isSuccessTasks } = useQuery({
 		queryKey: ["tasks", "board", id],
 		queryFn: () => getTasks(api, id),
 	});
@@ -139,16 +139,18 @@ const Board = () => {
 									onDragUpdate={handleDragUpdate}
 									onDragEnd={handleDragEnd}
 								>
-									<Grid container spacing={{ xs: 2, md: 3 }}>
-										{statues.map(({ name, title }) => (
-											<Grid item xs={12} sm={6} md={3} key={name}>
-												<BoardStatusColumn
-													status={{ name, title, tasks: tasks[name] }}
-													board={board._id}
-												/>
-											</Grid>
-										))}
-									</Grid>
+									{isSuccessTasks && (
+										<Grid container spacing={{ xs: 2, md: 3 }}>
+											{statues.map(({ name, title }) => (
+												<Grid item xs={12} sm={6} md={3} key={name}>
+													<BoardStatusColumn
+														status={{ name, title, tasks: tasks[name] }}
+														board={board._id}
+													/>
+												</Grid>
+											))}
+										</Grid>
+									)}
 								</DragDropContext>
 							</Box>
 						</>
