@@ -1,4 +1,4 @@
-import { Alert, Box, Grid, Typography } from "@mui/material";
+import { Alert, Box, Grid, Skeleton, Typography } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Star";
 import { amber } from "@mui/material/colors";
 import { useQuery } from "@tanstack/react-query";
@@ -35,7 +35,14 @@ const Boards = () => {
 							/>
 						</Typography>
 						{isPending ? (
-							<p>loading...</p>
+							<Grid container spacing={{ xs: 2, md: 3 }}>
+								<Grid item xs={12} sm={6} md={4} xl={3} key={1}>
+									<Skeleton variant="rectangular" height={72} />
+								</Grid>
+								<Grid item xs={12} sm={6} md={4} xl={3} key={2}>
+									<Skeleton variant="rectangular" height={72} />
+								</Grid>
+							</Grid>
 						) : boards.filter((board) => board.favorite).length > 0 ? (
 							<Grid container spacing={{ xs: 2, md: 3 }}>
 								{boards.map((board) => {
@@ -62,7 +69,17 @@ const Boards = () => {
 							<CreateBoardForm navigate={navigate} />
 						</Box>
 						{isPending ? (
-							<p>loading...</p>
+							<Grid container spacing={{ xs: 2, md: 3 }}>
+								<Grid item xs={12} sm={6} md={4} xl={3}>
+									<Skeleton variant="rectangular" height={72} />
+								</Grid>
+								<Grid item xs={12} sm={6} md={4} xl={3}>
+									<Skeleton variant="rectangular" height={72} />
+								</Grid>
+								<Grid item xs={12} sm={6} md={4} xl={3}>
+									<Skeleton variant="rectangular" height={72} />
+								</Grid>
+							</Grid>
 						) : isError ? (
 							<Alert severity="error">
 								There was a problem while searching your boards, please try

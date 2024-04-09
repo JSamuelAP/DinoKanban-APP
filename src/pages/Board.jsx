@@ -1,5 +1,16 @@
 import { useState } from "react";
-import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Card,
+	CardContent,
+	CardHeader,
+	Divider,
+	Grid,
+	Skeleton,
+	Stack,
+	Typography,
+} from "@mui/material";
 import CalendarIcon from "@mui/icons-material/CalendarMonth";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Link as RouterLink, useParams } from "react-router-dom";
@@ -40,7 +51,11 @@ const Board = () => {
 		queryFn: () => getBoard(api, id),
 	});
 
-	const { data: tasks, isSuccess: isSuccessTasks } = useQuery({
+	const {
+		data: tasks,
+		isLoading: isLoadingTasks,
+		isSuccess: isSuccessTasks,
+	} = useQuery({
 		queryKey: ["tasks", "board", id],
 		queryFn: () => getTasks(api, id),
 	});
@@ -67,7 +82,7 @@ const Board = () => {
 		<>
 			<Layout>
 				<Box component="main" mt={4} mb={8}>
-					{isError && (
+					{isError ? (
 						<>
 							<Typography component="h1" textAlign="center" mt={8}>
 								<Typography
@@ -95,42 +110,53 @@ const Board = () => {
 								</Button>
 							</Box>
 						</>
-					)}
-					{isLoading && <p>loading...</p>}
-					{isSuccess && (
+					) : (
 						<>
 							<Box component="section">
-								<Box
-									display="flex"
-									justifyContent="space-between"
-									alignItems="start"
-								>
-									<EditableBoardName
-										isEditMode={editMode}
-										board={board}
-										handleBlur={() => setEditMode(false)}
-										variant="board-page"
-									/>
-									<CardBoardMenu
-										board={board}
-										handleEdit={() => setEditMode(true)}
-									/>
-								</Box>
-								<Typography
-									component="time"
-									dateTime={dayjs(board.createdAt).format("YYYY-MM-DD")}
-									variant="body2"
-									color="gray"
-									display="inline-block"
-									mb={2}
-								>
-									<CalendarIcon
-										fontSize="small"
-										sx={{ verticalAlign: "top", mr: 0.5 }}
-									/>
-									Created at{" "}
-									{dayjs(board.createdAt).format("dddd, MMMM DD, YYYY")}
-								</Typography>
+								{isLoading ? (
+									<>
+										<Typography variant="h4">
+											<Skeleton variant="text" width={300} />
+										</Typography>
+										<Typography variant="body2" mb={2}>
+											<Skeleton variant="text" width={350} />
+										</Typography>
+									</>
+								) : (
+									<>
+										<Box
+											display="flex"
+											justifyContent="space-between"
+											alignItems="start"
+										>
+											<EditableBoardName
+												isEditMode={editMode}
+												board={board}
+												handleBlur={() => setEditMode(false)}
+												variant="board-page"
+											/>
+											<CardBoardMenu
+												board={board}
+												handleEdit={() => setEditMode(true)}
+											/>
+										</Box>
+										<Typography
+											component="time"
+											dateTime={dayjs(board.createdAt).format("YYYY-MM-DD")}
+											variant="body2"
+											color="gray"
+											display="inline-block"
+											mb={2}
+										>
+											<CalendarIcon
+												fontSize="small"
+												sx={{ verticalAlign: "top", mr: 0.5 }}
+											/>
+											Created at{" "}
+											{dayjs(board.createdAt).format("dddd, MMMM DD, YYYY")}
+										</Typography>
+									</>
+								)}
 								<Divider />
 							</Box>
 							<Box component="section" mt={4}>
@@ -139,9 +165,88 @@ const Board = () => {
 									onDragUpdate={handleDragUpdate}
 									onDragEnd={handleDragEnd}
 								>
-									{isSuccessTasks && (
-										<Grid container spacing={{ xs: 2, md: 3 }}>
-											{statues.map(({ name, title }) => (
+									<Grid container spacing={{ xs: 2, md: 3 }}>
+										{(isLoading || isLoadingTasks) && (
+											<>
+												<Grid item xs={12} sm={6} md={3}>
+													<Card>
+														<CardHeader
+															title={
+																<Typography variant="h4">
+																	<Skeleton variant="text" />
+																</Typography>
+															}
+															sx={{ pb: 0 }}
+														/>
+														<CardContent>
+															<Stack spacing={1}>
+																<Skeleton variant="rectangular" height={58} />
+															</Stack>
+														</CardContent>
+													</Card>
+												</Grid>
+												<Grid item xs={12} sm={6} md={3}>
+													<Card>
+														<CardHeader
+															title={
+																<Typography variant="h4">
+																	<Skeleton variant="text" />
+																</Typography>
+															}
+															sx={{ pb: 0 }}
+														/>
+														<CardContent>
+															<Stack spacing={1}>
+																<Skeleton variant="rectangular" height={58} />
+																<Skeleton variant="rectangular" height={58} />
+																<Skeleton variant="rectangular" height={58} />
+															</Stack>
+														</CardContent>
+													</Card>
+												</Grid>
+												<Grid item xs={12} sm={6} md={3}>
+													<Card>
+														<CardHeader
+															title={
+																<Typography variant="h4">
+																	<Skeleton variant="text" />
+																</Typography>
+															}
+															sx={{ pb: 0 }}
+														/>
+														<CardContent>
+															<Stack spacing={1}>
+																<Skeleton variant="rectangular" height={58} />
+																<Skeleton variant="rectangular" height={58} />
+															</Stack>
+														</CardContent>
+													</Card>
+												</Grid>
+												<Grid item xs={12} sm={6} md={3}>
+													<Card>
+														<CardHeader
+															title={
+																<Typography variant="h4">
+																	<Skeleton variant="text" />
+																</Typography>
+															}
+															sx={{ pb: 0 }}
+														/>
+														<CardContent>
+															<Stack spacing={1}>
+																<Skeleton variant="rectangular" height={58} />
+																<Skeleton variant="rectangular" height={58} />
+																<Skeleton variant="rectangular" height={58} />
+																<Skeleton variant="rectangular" height={58} />
+															</Stack>
+														</CardContent>
+													</Card>
+												</Grid>
+											</>
+										)}
+										{isSuccessTasks &&
+											isSuccess &&
+											statues.map(({ name, title }) => (
 												<Grid item xs={12} sm={6} md={3} key={name}>
 													<BoardStatusColumn
 														status={{ name, title, tasks: tasks[name] }}
@@ -149,8 +254,7 @@ const Board = () => {
 													/>
 												</Grid>
 											))}
-										</Grid>
-									)}
+									</Grid>
 								</DragDropContext>
 							</Box>
 						</>
