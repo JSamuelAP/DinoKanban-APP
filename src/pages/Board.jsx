@@ -27,6 +27,7 @@ import { getBoard } from "../services/boardsServices.js";
 import { getTasks, updateTask } from "../services/tasksServices.js";
 import dayjs from "../helpers/dayjs.js";
 import useDragAndDrop from "../hooks/useDragAndDrop.js";
+import useBoardsStore from "../store/boardsStore.js";
 
 const statues = [
 	{ name: "backlog", title: "💡 Backlog" },
@@ -40,6 +41,7 @@ const Board = () => {
 	const [editMode, setEditMode] = useState(false);
 	const api = useApiPrivate();
 	const queryClient = useQueryClient();
+	const { isFavorite } = useBoardsStore();
 
 	const {
 		data: board,
@@ -50,6 +52,8 @@ const Board = () => {
 		queryKey: ["board", id],
 		queryFn: () => getBoard(api, id),
 	});
+
+	if (isSuccess) board.favorite = isFavorite(board._id);
 
 	const {
 		data: tasks,

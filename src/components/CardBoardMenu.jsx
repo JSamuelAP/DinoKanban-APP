@@ -17,12 +17,14 @@ import { red, blue, amber } from "@mui/material/colors";
 import useMenu from "../hooks/useMenu.js";
 import useDialog from "../hooks/useDialog";
 import ConfirmDeleteBoard from "./ConfirmDeleteBoard.jsx";
+import useBoardsStore from "../store/boardsStore.js";
 
 const CardBoardMenu = ({ board, handleEdit }) => {
 	const { _id, favorite } = board;
 	const [anchorEl, handleClick, handleClose] = useMenu();
 	const [openDialog, handleOpenDialog, handleCloseDialog] =
 		useDialog(handleClose);
+	const { addFavorite, removeFavorite } = useBoardsStore();
 
 	return (
 		<>
@@ -53,14 +55,24 @@ const CardBoardMenu = ({ board, handleEdit }) => {
 			>
 				<MenuList dense>
 					{favorite ? (
-						<MenuItem role="button">
+						<MenuItem
+							role="button"
+							onClick={() => {
+								removeFavorite(board._id);
+							}}
+						>
 							<ListItemIcon>
 								<RemoveFavIcon sx={{ color: amber[500] }} />
 							</ListItemIcon>
 							<ListItemText>Remove from favorites</ListItemText>
 						</MenuItem>
 					) : (
-						<MenuItem role="button">
+						<MenuItem
+							role="button"
+							onClick={() => {
+								addFavorite(board._id);
+							}}
+						>
 							<ListItemIcon>
 								<AddFavIcon sx={{ color: amber[500] }} />
 							</ListItemIcon>

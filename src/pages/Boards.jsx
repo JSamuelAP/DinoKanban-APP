@@ -7,20 +7,26 @@ import { useNavigate } from "react-router-dom";
 import { Layout, CardBoard, CreateBoardForm } from "../components/";
 import useApiPrivate from "../hooks/useApiPrivate";
 import { getBoards } from "../services/boardsServices";
+import useBoardsStore from "../store/boardsStore";
 
 const Boards = () => {
 	const api = useApiPrivate();
 	const navigate = useNavigate();
+	const { isFavorite } = useBoardsStore();
 
-	const {
-		data: boards,
-		isPending,
-		isError,
-	} = useQuery({
+	const { data, isPending, isSuccess, isError } = useQuery({
 		queryKey: ["boards"],
 		queryFn: () => getBoards(api),
 		retry: 0,
 	});
+
+	const boards = isSuccess
+		? data.map((board) => {
+				board.favorite = isFavorite(board._id);
+				return board;
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+		  })
+		: [];
 
 	return (
 		<>

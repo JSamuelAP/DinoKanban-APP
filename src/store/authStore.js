@@ -7,10 +7,15 @@ const useAuthStore = create(
 		isAuth: false,
 		accessToken: null,
 		setSession: (user, token) =>
-			set(() => ({ user, isAuth: true, accessToken: token })),
+			set(() => ({ user, isAuth: true, accessToken: token }), false, "LOGIN"),
 		closeSession: () =>
-			set(() => ({ user: null, isAuth: false, accessToken: null })),
-		setToken: (token) => set(() => ({ accessToken: token })),
+			set(
+				() => ({ user: null, isAuth: false, accessToken: null }),
+				false,
+				"LOGOUT"
+			),
+		setToken: (token) =>
+			set(() => ({ accessToken: token }), false, "SET_TOKEN"),
 	}))
 );
 
