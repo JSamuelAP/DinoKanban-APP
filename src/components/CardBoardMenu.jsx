@@ -22,9 +22,11 @@ import useBoardsStore from "../store/boardsStore.js";
 const CardBoardMenu = ({ board, handleEdit }) => {
 	const { _id, favorite } = board;
 	const [anchorEl, handleClick, handleClose] = useMenu();
-	const [openDialog, handleOpenDialog, handleCloseDialog] =
-		useDialog(handleClose);
 	const { addFavorite, removeFavorite } = useBoardsStore();
+	const [openDialog, handleOpenDialog, handleCloseDialog] = useDialog(() => {
+		removeFavorite(_id);
+		handleClose();
+	});
 
 	return (
 		<>
