@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useQuery } from "@tanstack/react-query";
 import {
 	Box,
 	Divider,
@@ -21,15 +22,11 @@ import { styled } from "@mui/material/styles";
 import { amber } from "@mui/material/colors";
 
 import useAuthStore from "../store/authStore";
+import useBoardsStore from "../store/boardsStore";
+import useApiPrivate from "../hooks/useApiPrivate";
+import { getBoards } from "../services/boardsServices";
 import ProfileBox from "./ProfileBox";
 import { showOnMobile } from "../helpers/mediaQueries";
-
-const boards = [
-	{ id: 1, title: "Board 1", favorite: true },
-	{ id: 2, title: "Board 2", favorite: true },
-	{ id: 3, title: "Board 3", favorite: false },
-	{ id: 4, title: "Board 4", favorite: false },
-];
 
 const StyledDivider = styled(Divider)({
 	margin: "16px 0",
@@ -42,7 +39,23 @@ const BoardsNav = styled(List)({
 });
 
 const NavbarDrawer = ({ open, handleToggle, handleLogout }) => {
+	const api = useApiPrivate();
 	const { isAuth } = useAuthStore();
+	const { isFavorite } = useBoardsStore();
+
+	const { data, isSuccess } = useQuery({
+		queryKey: ["boards"],
+		queryFn: () => getBoards(api),
+		retry: 0,
+	});
+
+	const boards = isSuccess
+		? data.map((board) => {
+				board.favorite = isFavorite(board._id);
+				return board;
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+		  })
+		: [];
 
 	return (
 		<nav>
@@ -79,26 +92,27 @@ const NavbarDrawer = ({ open, handleToggle, handleLogout }) => {
 									</Typography>
 								</ListItem>
 								<BoardsNav dense>
-									{boards.map((board) => (
-										<ListItem key={board.id} disablePadding>
-											<ListItemButton
-												component={RouterLink}
-												to={`/boards/${board.id}`}
-											>
-												<ListItemIcon sx={{ mr: 1 }}>
-													<BoardIcon color="primary" />
-												</ListItemIcon>
-												<Typography component="span" noWrap width={214}>
-													{board.title}
-												</Typography>
-												{board.favorite && (
-													<ListItemIcon>
-														<FavoriteIcon sx={{ color: amber[500] }} />
+									{isSuccess &&
+										boards.map((board) => (
+											<ListItem key={board._id} disablePadding>
+												<ListItemButton
+													component={RouterLink}
+													to={`/boards/${board.id}`}
+												>
+													<ListItemIcon sx={{ mr: 1 }}>
+														<BoardIcon color="primary" />
 													</ListItemIcon>
-												)}
-											</ListItemButton>
-										</ListItem>
-									))}
+													<Typography component="span" noWrap width={214}>
+														{board.name}
+													</Typography>
+													{board.favorite && (
+														<ListItemIcon>
+															<FavoriteIcon sx={{ color: amber[500] }} />
+														</ListItemIcon>
+													)}
+												</ListItemButton>
+											</ListItem>
+										))}
 									<ListItem disablePadding>
 										<ListItemButton component={RouterLink} to="/boards">
 											<ListItemIcon sx={{ mr: 1 }}>
