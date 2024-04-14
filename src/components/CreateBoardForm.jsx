@@ -7,6 +7,9 @@ import {
 	DialogContent,
 	DialogTitle,
 	Fab,
+	ListItemButton,
+	ListItemIcon,
+	ListItemText,
 	TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -17,7 +20,7 @@ import useDialog from "../hooks/useDialog";
 import useApiPrivate from "../hooks/useApiPrivate.js";
 import { createBoard } from "../services/boardsServices";
 
-const CreateBoardForm = ({ navigate }) => {
+const CreateBoardForm = ({ navigate, variant = "fab" }) => {
 	const {
 		register,
 		handleSubmit,
@@ -45,9 +48,22 @@ const CreateBoardForm = ({ navigate }) => {
 
 	return (
 		<>
-			<Fab color="primary" aria-label="add" onClick={handleOpen}>
-				<AddIcon />
-			</Fab>
+			{variant === "fab" && (
+				<Fab color="primary" aria-label="add" onClick={handleOpen}>
+					<AddIcon />
+				</Fab>
+			)}
+			{variant === "list-item" && (
+				<ListItemButton onClick={handleOpen}>
+					<ListItemIcon sx={{ mr: 1 }}>
+						<AddIcon />
+					</ListItemIcon>
+					<ListItemText
+						primary="Create new"
+						primaryTypographyProps={{ color: "GrayText" }}
+					/>
+				</ListItemButton>
+			)}
 			<Dialog
 				open={open}
 				onClose={handleClose}
@@ -90,6 +106,7 @@ const CreateBoardForm = ({ navigate }) => {
 
 CreateBoardForm.propTypes = {
 	navigate: PropTypes.func.isRequired,
+	variant: PropTypes.oneOf(["fab", "list-item"]),
 };
 
 export default CreateBoardForm;

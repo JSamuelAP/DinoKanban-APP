@@ -15,9 +15,8 @@ import LoginIcon from "@mui/icons-material/Login";
 import SignupIcon from "@mui/icons-material/PersonAdd";
 import BoardIcon from "@mui/icons-material/ViewKanban";
 import FavoriteIcon from "@mui/icons-material/Star";
-import AddIcon from "@mui/icons-material/Add";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { amber } from "@mui/material/colors";
 
@@ -27,6 +26,7 @@ import useApiPrivate from "../hooks/useApiPrivate";
 import { getBoards } from "../services/boardsServices";
 import ProfileBox from "./ProfileBox";
 import { showOnMobile } from "../helpers/mediaQueries";
+import CreateBoardForm from "./CreateBoardForm";
 
 const StyledDivider = styled(Divider)({
 	margin: "16px 0",
@@ -42,6 +42,7 @@ const NavbarDrawer = ({ open, handleToggle, handleLogout }) => {
 	const api = useApiPrivate();
 	const { isAuth } = useAuthStore();
 	const { isFavorite } = useBoardsStore();
+	const navigate = useNavigate();
 
 	const { data, isSuccess } = useQuery({
 		queryKey: ["boards"],
@@ -114,15 +115,7 @@ const NavbarDrawer = ({ open, handleToggle, handleLogout }) => {
 											</ListItem>
 										))}
 									<ListItem disablePadding>
-										<ListItemButton component={RouterLink} to="/boards">
-											<ListItemIcon sx={{ mr: 1 }}>
-												<AddIcon />
-											</ListItemIcon>
-											<ListItemText
-												primary="Create new"
-												primaryTypographyProps={{ color: "GrayText" }}
-											/>
-										</ListItemButton>
+										<CreateBoardForm variant="list-item" navigate={navigate} />
 									</ListItem>
 								</BoardsNav>
 								<StyledDivider />
