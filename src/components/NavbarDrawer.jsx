@@ -48,6 +48,7 @@ const NavbarDrawer = ({ open, handleToggle, handleLogout }) => {
 		queryKey: ["boards"],
 		queryFn: () => getBoards(api),
 		retry: 0,
+		enabled: isAuth,
 	});
 
 	const boards = isSuccess
