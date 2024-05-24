@@ -12,6 +12,9 @@ import {
 import { Layout } from "../components/";
 import { Link as RouterLink } from "react-router-dom";
 
+import screenshot from "../assets/ui-screenshot.png";
+import demo from "../assets/ui-demo.gif";
+
 const LandingPage = () => {
 	return (
 		<>
@@ -22,7 +25,7 @@ const LandingPage = () => {
 							<Paper elevation={12} sx={{ mt: { md: 5 }, overflow: "hidden" }}>
 								<Box
 									component="img"
-									src="/ui-screenshot.png"
+									src={screenshot}
 									alt="Kanban board"
 									display="block"
 									sx={{ maxWidth: "100%" }}
@@ -82,7 +85,7 @@ const LandingPage = () => {
 							<Paper elevation={12} sx={{ overflow: "hidden" }}>
 								<Box
 									component="img"
-									src="/ui-demo.gif"
+									src={demo}
 									alt="Animation about features"
 									display="block"
 									sx={{ width: "100%", maxWidth: "100%" }}
