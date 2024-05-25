@@ -16,9 +16,10 @@ Entre las características de Dinokanban App:
 
 ## Enlaces 🔗
 
-- Web app: [Github pages](https://farepassage-app.web.app)
+- Web app: [Github pages](https://jsamuelap.github.io/DinoKanban-APP/)
 - Repositorio: [Github](https://github.com/JSamuelAP/DinoKanban-APP)
 - Respositorio de la API: [Github](https://github.com/JSamuelAP/DinoKanban-API)
+- Documentación de la API: [Postman](https://documenter.getpostman.com/view/27778436/2s9Ykq7LXn)
 
 ## Tecnologías 🧰
 
